@@ -26,7 +26,6 @@ body{font:400 15px/1.45 var(--sans);color:var(--ink);background:var(--cream);-we
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 input,textarea{font:inherit;color:inherit}
 :focus-visible{outline:2.5px solid var(--leaf);outline-offset:2px;border-radius:6px}
-.on-table :focus-visible{outline-color:var(--mint)}
 img{display:block}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
@@ -70,62 +69,67 @@ img{display:block}
 .meal .cnt{position:absolute;top:9px;right:10px;min-width:20px;height:20px;border-radius:10px;padding:0 6px;
   background:var(--gold);color:#fff;font:800 11.5px/20px var(--sans);text-align:center}
 
-/* ---------- the green table (menu) ---------- */
-.table{background:var(--table);color:var(--cream);border-radius:26px 26px 0 0;min-height:60vh;padding-bottom:110px}
-.bar{position:sticky;top:0;z-index:5;background:var(--table);border-radius:26px 26px 0 0;padding:12px 0 8px}
-.bar.stuck{border-radius:0;box-shadow:0 6px 18px rgba(0,20,12,.35)}
-.tabs{display:flex;align-items:center;gap:4px;padding:0 10px 0 12px}
-.tab{font:600 22px/1 var(--serif);color:var(--mint-2);padding:8px 8px 9px;position:relative}
-.tab[aria-selected="true"]{color:var(--cream)}
-.tab[aria-selected="true"]::after{content:"";position:absolute;left:8px;right:8px;bottom:2px;height:2px;border-radius:2px;background:var(--mint)}
-.veg{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--mint);padding:6px 4px}
-.sw{width:34px;height:20px;border-radius:10px;background:#21604b;position:relative;transition:background .2s}
-.sw::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--mint);transition:transform .2s var(--ease)}
-.veg[aria-checked="true"] .sw{background:var(--leaf)}
-.veg[aria-checked="true"] .sw::after{transform:translateX(14px);background:#fff}
-.chips{display:flex;gap:7px;padding:8px 14px 2px;overflow-x:auto;scrollbar-width:none}
+/* ---------- menu: cream page, each dish on its own green plate ---------- */
+.table{background:var(--cream);color:var(--ink);min-height:60vh;padding-bottom:110px;border-top:1px solid var(--line)}
+.bar{position:sticky;top:0;z-index:5;background:var(--cream);padding:12px 0 10px;transition:box-shadow .2s,background .2s}
+.bar.stuck{background:var(--paper);box-shadow:0 8px 18px rgba(20,35,27,.10)}
+.tabs{display:flex;align-items:center;gap:6px;padding:0 14px}
+.tab{font:600 18px/1 var(--serif);color:var(--forest);padding:9px 15px 10px;border-radius:999px;border:1.5px solid var(--line);background:var(--paper)}
+.tab[aria-selected="true"]{background:var(--forest);border-color:var(--forest);color:var(--cream)}
+.veg{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;color:var(--forest);padding:6px 0}
+.sw{width:34px;height:20px;border-radius:10px;background:#d8cfb5;position:relative;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .2s var(--ease)}
+.veg[aria-checked="true"] .sw{background:#2f8f4e}
+.veg[aria-checked="true"] .sw::after{transform:translateX(14px)}
+.chips{display:flex;gap:7px;padding:10px 14px 0;overflow-x:auto;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex:none;border:1.5px solid #2b6a55;color:var(--mint);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700}
-.chip[aria-pressed="true"]{background:var(--mint);color:var(--table);border-color:var(--mint)}
+.chip{flex:none;border:1.5px solid var(--line);color:#3f5046;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700}
+.chip[aria-pressed="true"]{background:#e1eee3;color:var(--leaf-2);border-color:#9fcaa9}
 
-.sec{padding:6px 0 4px;content-visibility:auto;contain-intrinsic-size:auto 900px}
-.sec h2{font:600 15px/1 var(--sans);color:var(--mint-2);padding:16px 18px 4px}
-.row{display:grid;grid-template-columns:116px 1fr;gap:14px;padding:6px 16px 18px 8px;align-items:center;position:relative}
+.sec{padding:0 0 6px;content-visibility:auto;contain-intrinsic-size:auto 900px}
+.sec h2{font:600 34px/1 var(--serif);color:var(--forest);margin:26px 18px 2px;padding-bottom:10px;border-bottom:2px solid var(--forest);
+  display:flex;justify-content:space-between;align-items:baseline;letter-spacing:-.3px}
+.sec h2 span{font:700 13px/1 var(--sans);color:var(--mute);letter-spacing:0}
+.row{display:grid;grid-template-columns:104px 1fr;gap:16px;padding:16px 18px 22px 14px;align-items:center;position:relative;border-bottom:1px solid #e8dfc5}
 .row.hide{display:none}
-.pic{width:116px;height:116px;border-radius:50%;overflow:hidden;background:var(--table)}
-.pic img{width:116px;height:116px}
-.picw{position:relative;width:116px;height:116px}
+.pic{width:104px;height:104px;border-radius:50%;overflow:hidden;background:var(--table);box-shadow:0 10px 18px -8px rgba(3,64,48,.55)}
+.pic img{width:104px;height:104px}
+.picw{position:relative;width:104px;height:104px}
 .info{min-width:0}
-.nm{font:600 19px/1.15 var(--serif);color:var(--cream);display:flex;gap:7px;align-items:flex-start;text-align:left}
-.nm .vt{margin-top:4px}
-.ds{font-size:12.5px;color:var(--mint-2);margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.mac{display:flex;gap:12px;margin-top:6px;font-size:12px;color:var(--mint)}
-.mac b{color:var(--cream);font-weight:800}
-.open{position:absolute;inset:0;border-radius:18px}
-.add{position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);z-index:2}
-.plus{height:34px;padding:0 16px 0 12px;border-radius:999px;background:var(--cream);color:var(--table);display:flex;align-items:center;gap:5px;font-weight:800;font-size:14px;box-shadow:0 3px 10px rgba(0,0,0,.3);white-space:nowrap}
+.nm{font:600 21px/1.12 var(--serif);color:var(--forest);display:flex;gap:7px;align-items:flex-start;text-align:left}
+.nm .vt{margin-top:5px}
+.ds{font-size:13px;color:#5f6e64;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mac{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;font-size:12px;color:#5f6e64}
+.mac span{background:#eee6cf;border-radius:7px;padding:3px 7px}
+.mac b{color:var(--ink);font-weight:800}
+.mac .goal{background:#e1eee3;color:var(--leaf-2);font-weight:800}
+.open{position:absolute;inset:0}
+.add{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);z-index:2}
+.plus{height:34px;padding:0 16px 0 12px;border-radius:999px;background:#fff;color:var(--forest);display:flex;align-items:center;gap:5px;font-weight:800;font-size:14px;
+  border:1.5px solid #e2d9bf;box-shadow:0 4px 10px rgba(20,35,27,.16);white-space:nowrap}
 .plus svg{width:15px;height:15px}
-.stepper{display:flex;align-items:center;background:var(--leaf);color:#fff;border-radius:999px;height:34px;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+.stepper{display:flex;align-items:center;background:var(--forest);color:var(--cream);border-radius:999px;height:34px;box-shadow:0 4px 10px rgba(20,35,27,.25)}
 .stepper button{width:34px;height:34px;display:grid;place-items:center}
 .stepper button svg{width:16px;height:16px}
 .stepper output{font-weight:800;min-width:12px;text-align:center}
-.empty{display:none;padding:10px 18px 14px;font-size:13px;color:var(--mint-2)}
+.empty{display:none;padding:14px 18px;font-size:13.5px;color:var(--mute)}
 .sec.none .empty{display:block}
 
-.vt{width:12px;height:12px;flex:none;border:1.5px solid #4caf73;border-radius:2px;display:grid;place-items:center}
-.vt::after{content:"";width:5px;height:5px;border-radius:50%;background:#4caf73}
-.vt.n{border-color:#c2573f}
-.vt.n::after{border-radius:0;width:0;height:0;background:none;border-left:3px solid transparent;border-right:3px solid transparent;border-bottom:5px solid #c2573f}
+.vt{width:12px;height:12px;flex:none;border:1.5px solid #2f8f4e;border-radius:2px;display:grid;place-items:center}
+.vt::after{content:"";width:5px;height:5px;border-radius:50%;background:#2f8f4e}
+.vt.n{border-color:#b23a24}
+.vt.n::after{border-radius:0;width:0;height:0;background:none;border-left:3px solid transparent;border-right:3px solid transparent;border-bottom:5px solid #b23a24}
 
 /* ---------- cart bar + nav ---------- */
 .cartbar{position:fixed;left:50%;transform:translate(-50%,140%);bottom:calc(var(--nav) + var(--safe-b) + 10px);
-  width:min(412px,calc(100% - 28px));z-index:30;background:var(--cream);color:var(--ink);border-radius:18px;
+  width:min(412px,calc(100% - 28px));z-index:30;background:var(--forest);color:var(--cream);border-radius:18px;
   display:flex;align-items:center;justify-content:space-between;padding:10px 10px 10px 16px;
   box-shadow:0 10px 30px rgba(0,25,15,.35);transition:transform .28s var(--ease)}
 .cartbar{visibility:hidden}
 .cartbar.show{transform:translate(-50%,0);visibility:visible}
-.cartbar .l{font-size:12.5px;color:var(--mute);font-weight:600}
-.cartbar .l b{display:block;font-size:15px;color:var(--ink);font-weight:800}
+.cartbar .l{font-size:12.5px;color:var(--mint);font-weight:600}
+.cartbar .l b{display:block;font-size:15px;color:var(--cream);font-weight:800}
+.cartbar .btn{background:var(--cream);color:var(--forest)}
 .btn{background:var(--leaf);color:#fff;border-radius:14px;padding:12px 18px;font-weight:800;font-size:15px}
 .btn:active{background:var(--leaf-2)}
 .btn[disabled]{background:#b8c4bb;cursor:not-allowed}
@@ -314,7 +318,7 @@ nav .dot[data-n]::after{content:attr(data-n);position:absolute;top:-4px;right:-1
     </button>
     <div class="meals" id="meals" role="group" aria-label="Which meal"></div>
 
-    <div class="table on-table">
+    <div class="table">
       <div class="bar" id="bar">
         <div class="tabs" role="tablist" id="tabs"></div>
         <div class="chips" id="chips" role="group" aria-label="Filter by goal"></div>
@@ -540,10 +544,11 @@ function buildMenu(){
         '<div class="picw"><div class="pic"><img src="' + img(d.id, "t") + '" width="116" height="116" alt="" decoding="async"' + (eager ? (first === 1 ? ' fetchpriority="high"' : "") : ' loading="lazy"') + '></div><div class="add" data-add-wrap="' + d.id + '"></div></div>' +
         '<div class="info"><div class="nm"><i class="vt' + (d.vt === "nonveg" ? " n" : "") + '" aria-label="' + (d.vt === "veg" ? "Veg" : "Non-veg") + '"></i>' + esc(d.name) + "</div>" +
         '<p class="ds">' + esc(d.desc) + "</p>" +
-        '<div class="mac"><span><b>' + d.kcal + "</b> kcal</span><span><b>" + d.p + "g</b> protein</span><span><b>" + d.c + "g</b> carbs</span></div></div>" +
+        '<div class="mac"><span><b>' + d.kcal + "</b> kcal</span><span><b>" + d.p + "g</b> protein</span><span><b>" + d.c + "g</b> carbs</span>" +
+        (goalsOf(d)[0] ? '<span class="goal">' + esc(goalsOf(d)[0]) + "</span>" : "") + "</div></div>" +
         '<button class="open" data-open="' + d.id + '" aria-label="' + esc(d.name) + ', details"></button></div>';
     }).join("");
-    return '<section class="sec" id="sec-' + esc(c) + '" data-cat="' + esc(c) + '"><h2>' + esc(c) + '</h2>' + rows +
+    return '<section class="sec" id="sec-' + esc(c) + '" data-cat="' + esc(c) + '"><h2>' + esc(c) + '<span class="cnt"></span></h2>' + rows +
       '<p class="empty">Nothing here matches this filter.</p></section>';
   }).join("");
   syncAdds();
@@ -560,7 +565,8 @@ function applyFilters(){
     const hide = (S.vegOnly && r.dataset.vt !== "veg") || (S.goal && !r.dataset.goals.split("|").includes(S.goal));
     r.classList.toggle("hide", hide);
   });
-  document.querySelectorAll(".sec").forEach(s => s.classList.toggle("none", !s.querySelector(".row:not(.hide)")));
+  document.querySelectorAll(".sec").forEach(s => { const n = s.querySelectorAll(".row:not(.hide)").length;
+    s.classList.toggle("none", !n); s.querySelector(".cnt").textContent = n + (n === 1 ? " dish" : " dishes"); });
 }
 
 /* ---------------- cart ---------------- */
