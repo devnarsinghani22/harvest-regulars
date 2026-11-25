@@ -488,7 +488,7 @@ function roomFor(meal){
   const held = S.cart.length;
   if (held >= left()) return "That uses up your plan. Renew to add more.";
   if (held >= RULES.cart_max) return "One order holds up to " + RULES.cart_max + " meals.";
-  if (inMeal(meal) >= RULES.meal_max) return "Up to " + RULES.meal_max + " " + meal + "es a day. Switch to " + (meal === "lunch" ? "dinner" : "lunch") + " for more.";
+  if (inMeal(meal) >= RULES.meal_max) return "Up to " + RULES.meal_max + " " + (meal === "lunch" ? "lunches" : "dinners") + " a day. Switch to " + (meal === "lunch" ? "dinner" : "lunch") + " for more.";
   return "";
 }
 
