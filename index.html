@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#f6f1df">
+<title>The Regular's Club | Harvest Salad Co (concept)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="img/classic-caesar-salad-t.webp" fetchpriority="high">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" media="print" onload="this.media='all'">
+<style>
+:root{
+  --table:#034030; --table-2:#0a4a39; --forest:#123d2b; --leaf:#1d7a4c; --leaf-2:#17663f;
+  --mint:#b9dcc4; --mint-2:#8fbfa0; --cream:#f6f1df; --paper:#fffcf3; --line:#e4dcc3;
+  --ink:#14231b; --mute:#66786c; --gold:#b8790f; --gold-bg:#fbf0d9; --tomato:#a8321f;
+  --serif:'EB Garamond',Georgia,'Times New Roman',serif;
+  --sans:'Nunito Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --nav:64px; --ease:cubic-bezier(.2,.8,.2,1);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{background:var(--cream)}
+body{font:400 15px/1.45 var(--sans);color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2.5px solid var(--leaf);outline-offset:2px;border-radius:6px}
+.on-table :focus-visible{outline-color:var(--mint)}
+img{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+#app{max-width:440px;margin:0 auto;min-height:100dvh;background:var(--cream);position:relative;
+  padding-bottom:calc(var(--nav) + var(--safe-b))}
+.view{display:none}
+.view.active{display:block}
+
+/* ---------- header + meal pass (the one loud thing) ---------- */
+.top{padding:14px 18px 0;display:flex;justify-content:space-between;align-items:center}
+.hi{font-weight:700;font-size:15px}
+.hi small{display:block;font-weight:600;font-size:12px;color:var(--mute)}
+.logo{height:34px;width:auto;color:var(--leaf);display:block}
+.demo{margin:10px 18px 0;font-size:11.5px;color:var(--mute);display:flex;gap:6px;align-items:center}
+.demo i{width:6px;height:6px;border-radius:50%;background:var(--gold);flex:none}
+
+.pass{margin:12px 14px 0;padding:16px 16px 14px;border-radius:20px;background:var(--paper);
+  border:1px solid var(--line);display:block;width:calc(100% - 28px);text-align:left}
+.pass-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.pass-left{font:600 30px/1 var(--serif);color:var(--forest);letter-spacing:-.2px}
+.pass-left span{font:700 13px/1 var(--sans);color:var(--mute);letter-spacing:0;margin-left:6px}
+.pass-end{font-size:12.5px;color:var(--mute);font-weight:600;text-align:right}
+.stamps{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.st{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex:none;
+  border:1.5px dashed #b9c9bd;color:#b9c9bd}
+.st svg{width:14px;height:14px}
+.st.used{background:var(--forest);border:1.5px solid var(--forest);color:var(--mint)}
+.st.held{border:1.5px solid var(--leaf);color:var(--leaf);background:#e7f2ea;border-style:solid}
+.st.stamp{animation:stamp .5s var(--ease) both}
+@keyframes stamp{0%{transform:scale(1.9) rotate(-18deg);opacity:0}60%{transform:scale(.92) rotate(4deg);opacity:1}100%{transform:none}}
+
+/* ---------- meal switch ---------- */
+.meals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 14px 14px}
+.meal{border-radius:16px;padding:10px 12px;text-align:left;border:1.5px solid var(--line);background:transparent;position:relative}
+.meal b{display:block;font:600 19px/1.1 var(--serif);color:var(--forest)}
+.meal span{display:block;font-size:12.5px;font-weight:700;margin-top:3px}
+.meal small{display:block;font-size:11.5px;color:var(--mute);margin-top:1px}
+.meal[aria-pressed="true"]{background:var(--forest);border-color:var(--forest);color:var(--cream)}
+.meal[aria-pressed="true"] b{color:var(--cream)}
+.meal[aria-pressed="true"] small{color:var(--mint)}
+.meal .cnt{position:absolute;top:9px;right:10px;min-width:20px;height:20px;border-radius:10px;padding:0 6px;
+  background:var(--gold);color:#fff;font:800 11.5px/20px var(--sans);text-align:center}
+
+/* ---------- the green table (menu) ---------- */
+.table{background:var(--table);color:var(--cream);border-radius:26px 26px 0 0;min-height:60vh;padding-bottom:110px}
+.bar{position:sticky;top:0;z-index:5;background:var(--table);border-radius:26px 26px 0 0;padding:12px 0 8px}
+.bar.stuck{border-radius:0;box-shadow:0 6px 18px rgba(0,20,12,.35)}
+.tabs{display:flex;align-items:center;gap:4px;padding:0 10px 0 12px}
+.tab{font:600 22px/1 var(--serif);color:var(--mint-2);padding:8px 8px 9px;position:relative}
+.tab[aria-selected="true"]{color:var(--cream)}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:8px;right:8px;bottom:2px;height:2px;border-radius:2px;background:var(--mint)}
+.veg{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--mint);padding:6px 4px}
+.sw{width:34px;height:20px;border-radius:10px;background:#21604b;position:relative;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:14px;height:14px;border-radius:50%;background:var(--mint);transition:transform .2s var(--ease)}
+.veg[aria-checked="true"] .sw{background:var(--leaf)}
+.veg[aria-checked="true"] .sw::after{transform:translateX(14px);background:#fff}
+.chips{display:flex;gap:7px;padding:8px 14px 2px;overflow-x:auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1.5px solid #2b6a55;color:var(--mint);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700}
+.chip[aria-pressed="true"]{background:var(--mint);color:var(--table);border-color:var(--mint)}
+
+.sec{padding:6px 0 4px;content-visibility:auto;contain-intrinsic-size:auto 900px}
+.sec h2{font:600 15px/1 var(--sans);color:var(--mint-2);padding:16px 18px 4px}
+.row{display:grid;grid-template-columns:116px 1fr;gap:12px;padding:6px 14px 6px 6px;align-items:center;position:relative}
+.row.hide{display:none}
+.pic{width:116px;height:116px;border-radius:50%;overflow:hidden;background:var(--table)}
+.pic img{width:116px;height:116px}
+.info{min-width:0;padding-right:44px}
+.nm{font:600 19px/1.15 var(--serif);color:var(--cream);display:flex;gap:7px;align-items:flex-start;text-align:left}
+.nm .vt{margin-top:4px}
+.ds{font-size:12.5px;color:var(--mint-2);margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mac{display:flex;gap:12px;margin-top:6px;font-size:12px;color:var(--mint)}
+.mac b{color:var(--cream);font-weight:800}
+.open{position:absolute;inset:0;border-radius:18px}
+.add{position:absolute;right:12px;bottom:14px;z-index:2}
+.plus{width:38px;height:38px;border-radius:50%;background:var(--cream);color:var(--table);display:grid;place-items:center;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.plus svg{width:18px;height:18px}
+.stepper{display:flex;align-items:center;background:var(--cream);color:var(--table);border-radius:999px;height:38px;box-shadow:0 3px 10px rgba(0,0,0,.25)}
+.stepper button{width:36px;height:38px;display:grid;place-items:center}
+.stepper button svg{width:16px;height:16px}
+.stepper output{font-weight:800;min-width:12px;text-align:center}
+.empty{display:none;padding:10px 18px 14px;font-size:13px;color:var(--mint-2)}
+.sec.none .empty{display:block}
+
+.vt{width:12px;height:12px;flex:none;border:1.5px solid #4caf73;border-radius:2px;display:grid;place-items:center}
+.vt::after{content:"";width:5px;height:5px;border-radius:50%;background:#4caf73}
+.vt.n{border-color:#c2573f}
+.vt.n::after{border-radius:0;width:0;height:0;background:none;border-left:3px solid transparent;border-right:3px solid transparent;border-bottom:5px solid #c2573f}
+
+/* ---------- cart bar + nav ---------- */
+.cartbar{position:fixed;left:50%;transform:translate(-50%,140%);bottom:calc(var(--nav) + var(--safe-b) + 10px);
+  width:min(412px,calc(100% - 28px));z-index:30;background:var(--cream);color:var(--ink);border-radius:18px;
+  display:flex;align-items:center;justify-content:space-between;padding:10px 10px 10px 16px;
+  box-shadow:0 10px 30px rgba(0,25,15,.35);transition:transform .28s var(--ease)}
+.cartbar.show{transform:translate(-50%,0)}
+.cartbar .l{font-size:12.5px;color:var(--mute);font-weight:600}
+.cartbar .l b{display:block;font-size:15px;color:var(--ink);font-weight:800}
+.btn{background:var(--leaf);color:#fff;border-radius:14px;padding:12px 18px;font-weight:800;font-size:15px}
+.btn:active{background:var(--leaf-2)}
+.btn[disabled]{background:#b8c4bb;cursor:not-allowed}
+.btn.wide{width:100%;padding:15px}
+.btn.ghost{background:transparent;color:var(--forest);border:1.5px solid var(--line)}
+.btn.gold{background:var(--gold)}
+
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(440px,100%);z-index:31;
+  height:calc(var(--nav) + var(--safe-b));padding-bottom:var(--safe-b);background:var(--paper);border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(3,1fr)}
+nav button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11.5px;font-weight:700;color:var(--mute)}
+nav svg{width:23px;height:23px}
+nav button[aria-current="page"]{color:var(--forest)}
+nav .dot{position:relative;display:block;height:23px}
+nav .dot[data-n]::after{content:attr(data-n);position:absolute;top:-4px;right:-10px;min-width:17px;height:17px;border-radius:9px;background:var(--gold);color:#fff;font-size:10.5px;line-height:17px;text-align:center;padding:0 4px}
+
+/* ---------- sheets ---------- */
+.scrim{position:fixed;inset:0;background:rgba(5,25,16,.5);z-index:40;opacity:0;pointer-events:none;transition:opacity .22s}
+.scrim.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:50%;bottom:0;width:min(440px,100%);max-height:92dvh;z-index:41;background:var(--paper);
+  border-radius:24px 24px 0 0;transform:translate(-50%,105%);transition:transform .3s var(--ease);
+  display:flex;flex-direction:column;overflow:hidden}
+.sheet{visibility:hidden;transition:transform .3s var(--ease),visibility 0s .3s}
+.sheet.show{transform:translate(-50%,0);visibility:visible;transition:transform .3s var(--ease),visibility 0s}
+.sh-body{overflow-y:auto;overscroll-behavior:contain;padding:0 18px 18px}
+.sh-head{padding:14px 18px 8px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sh-head h3{font:600 23px/1.15 var(--serif);color:var(--forest)}
+.sh-head p{font-size:12.5px;color:var(--mute);font-weight:600}
+.x{width:36px;height:36px;border-radius:50%;background:#efe9d5;display:grid;place-items:center;flex:none}
+.x svg{width:16px;height:16px}
+.sh-foot{padding:12px 18px calc(12px + var(--safe-b));border-top:1px solid var(--line);background:var(--paper)}
+
+/* dish sheet */
+.hero{background:var(--table);position:relative;aspect-ratio:1/0.82;overflow:hidden}
+.hero img{width:100%;height:auto;position:absolute;top:50%;left:0;transform:translateY(-50%)}
+.hero .x{position:absolute;top:12px;right:12px;background:rgba(246,241,223,.92)}
+.dname{font:600 27px/1.1 var(--serif);color:var(--forest);margin:16px 0 6px;display:flex;gap:9px;align-items:flex-start}
+.dname .vt{margin-top:8px}
+.ddesc{font-size:14px;color:#3f5046}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tag{font-size:12px;font-weight:800;color:var(--leaf);background:#e7f2ea;border-radius:999px;padding:4px 10px}
+.macro{margin-top:16px;border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.macro-top{display:flex;justify-content:space-between;align-items:baseline}
+.macro-top b{font:600 26px/1 var(--serif);color:var(--forest)}
+.macro-top span{font-size:12.5px;color:var(--mute);font-weight:600}
+.mbar{display:flex;height:10px;border-radius:5px;overflow:hidden;margin:10px 0 8px;gap:2px}
+.mbar i{display:block}
+.mleg{display:grid;grid-template-columns:repeat(3,1fr);font-size:12.5px}
+.mleg div b{display:block;font-size:15px}
+.k-p{background:#1d7a4c}.k-c{background:#d9a441}.k-f{background:#b8603e}
+.mleg .dotk{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}
+.og{margin-top:18px}
+.og h4{font-size:15px;font-weight:800;display:flex;justify-content:space-between;align-items:baseline}
+.og h4 small{font-size:12px;color:var(--mute);font-weight:600}
+.opt{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid #efe8d3;cursor:pointer}
+.opt:last-child{border-bottom:0}
+.opt .on{display:flex;align-items:center;gap:10px;font-size:14.5px}
+.opt .pr{font-size:13.5px;font-weight:700;color:var(--mute)}
+.opt input{appearance:none;width:20px;height:20px;border:2px solid #b9c4bb;border-radius:50%;flex:none;display:grid;place-items:center;margin:0}
+.opt input[type=checkbox]{border-radius:6px}
+.opt input:checked{border-color:var(--leaf);background:var(--leaf)}
+.opt input:checked::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+.opt input[type=checkbox]:checked::after{width:9px;height:5px;border-radius:0;background:none;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg) translate(1px,-1px)}
+.walletline{font-size:12.5px;color:var(--gold);font-weight:700;margin-top:4px}
+.foot-row{display:flex;gap:10px;align-items:center}
+.foot-row .btn{flex:1}
+.foot-note{font-size:12px;color:var(--mute);text-align:center;margin-top:8px;font-weight:600}
+
+/* review */
+.grp{border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin-top:12px;background:#fffef9}
+.grp-h{display:flex;justify-content:space-between;align-items:baseline}
+.grp-h b{font:600 20px/1.1 var(--serif);color:var(--forest)}
+.grp-h span{font-size:12px;color:var(--mute);font-weight:700}
+.line{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #f0ead7}
+.line:last-of-type{border-bottom:0}
+.line .th{width:48px;height:48px;border-radius:50%;background:var(--table);overflow:hidden}
+.line .th img{width:48px;height:48px}
+.line .t{font-weight:700;font-size:14px;line-height:1.25}
+.line .e{font-size:12px;color:var(--mute)}
+.line .e b{color:var(--gold)}
+.lact{display:flex;gap:2px}
+.lact button{font-size:12.5px;font-weight:800;color:var(--leaf);padding:6px 6px}
+.lact button.rm{color:var(--tomato)}
+.slots-h{font-size:13px;font-weight:800;margin:10px 0 8px;display:flex;justify-content:space-between}
+.slots-h span{color:var(--tomato);font-weight:700}
+.slots-h span.ok{color:var(--leaf)}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.slot{border:1.5px solid var(--line);border-radius:12px;padding:8px 4px;text-align:center;font-size:13px;font-weight:800;line-height:1.15}
+.slot small{display:block;font-size:10.5px;font-weight:700;color:var(--mute);margin-top:2px}
+.slot small.low{color:var(--gold)}
+.slot[aria-pressed="true"]{background:var(--forest);border-color:var(--forest);color:var(--cream)}
+.slot[aria-pressed="true"] small{color:var(--mint)}
+.slot[disabled]{opacity:.45;text-decoration:line-through;cursor:not-allowed}
+.kv{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #f0ead7;font-size:14px}
+.kv:last-child{border-bottom:0}
+.kv .k{color:var(--mute);font-weight:600}
+.kv .v{font-weight:700;text-align:right}
+.kv button.link{color:var(--leaf);font-weight:800;font-size:13px}
+.note{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;min-height:44px;resize:none;font-size:14px;margin-top:8px}
+.wallet{background:var(--gold-bg);border-radius:14px;padding:12px 14px;margin-top:12px;font-size:13.5px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.wallet b{color:var(--gold)}
+.wallet.ok{background:#e7f2ea}
+.wallet.ok b{color:var(--leaf)}
+.wallet .btn{padding:9px 12px;font-size:13.5px}
+.amts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.amt{border:1.5px solid var(--line);border-radius:14px;padding:12px 6px;font-weight:800;text-align:center}
+.amt small{display:block;font-size:11px;color:var(--mute);font-weight:700}
+.amt[aria-pressed="true"]{border-color:var(--leaf);background:#e7f2ea}
+
+/* success */
+#v-done{background:var(--cream);min-height:100dvh;padding:34px 18px 120px}
+.done-h{font:600 38px/1.05 var(--serif);color:var(--forest);margin-top:22px}
+.done-p{color:var(--mute);font-weight:600;margin-top:8px}
+.ticket{margin-top:18px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:6px 14px}
+
+/* orders + plan pages */
+.page{padding:18px 14px 30px}
+.page-h{font:600 34px/1 var(--serif);color:var(--forest);padding:6px 4px 4px}
+.page-s{color:var(--mute);font-weight:600;font-size:13px;padding:0 4px 8px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:12px}
+.card h3{font:600 21px/1.1 var(--serif);color:var(--forest)}
+.ord{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ord .when{font-size:12.5px;font-weight:800;color:var(--leaf)}
+.ord .when.past{color:var(--mute)}
+.ord .dish{font-weight:700;font-size:14.5px;margin-top:2px}
+.ord .ex{font-size:12px;color:var(--mute)}
+.pill{font-size:11.5px;font-weight:800;border-radius:999px;padding:3px 9px;background:#e7f2ea;color:var(--leaf);white-space:nowrap}
+.pill.past{background:#efe9d5;color:var(--mute)}
+.ord-act{display:flex;gap:8px;margin-top:12px}
+.ord-act .btn{flex:1;padding:10px;font-size:14px}
+.sub{font-size:14px;font-weight:800;color:var(--mute);margin:22px 4px 0}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.stat b{display:block;font:600 28px/1 var(--serif);color:var(--forest)}
+.stat span{font-size:12.5px;color:var(--mute);font-weight:600}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:#efe9d5;border-radius:12px;padding:3px;margin-top:12px}
+.seg button{border-radius:10px;padding:8px;font-weight:800;font-size:14px;color:var(--mute)}
+.seg button[aria-pressed="true"]{background:var(--paper);color:var(--forest);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.plan{border:1.5px solid var(--line);border-radius:16px;padding:12px 8px;text-align:center;background:#fff}
+.plan b{display:block;font:600 26px/1 var(--serif);color:var(--forest)}
+.plan .m{font-size:12px;color:var(--mute);font-weight:700}
+.plan .p{display:block;font-weight:800;margin-top:8px}
+.plan .pm{display:block;font-size:11.5px;color:var(--mute);font-weight:700}
+.plan[aria-pressed="true"]{border-color:var(--leaf);background:#e7f2ea}
+.code{display:flex;gap:8px;margin-top:12px}
+.code input{flex:1;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;text-transform:uppercase;min-width:0}
+.code input::placeholder{text-transform:none}
+.list-btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:13px 2px;border-bottom:1px solid #f0ead7;font-weight:700;font-size:14.5px;text-align:left}
+.list-btn:last-child{border-bottom:0}
+.list-btn svg{width:16px;height:16px;color:var(--mute)}
+
+.toast{position:fixed;left:50%;top:14px;transform:translate(-50%,-160%);z-index:60;background:var(--forest);color:var(--cream);
+  padding:11px 16px;border-radius:14px;font-weight:700;font-size:13.5px;width:max-content;max-width:min(400px,calc(100% - 28px));
+  box-shadow:0 10px 24px rgba(0,25,15,.3);transition:transform .25s var(--ease)}
+.toast{visibility:hidden;transition:transform .25s var(--ease),visibility 0s .25s}
+.toast.show{transform:translate(-50%,0);visibility:visible;transition:transform .25s var(--ease),visibility 0s}
+
+@media (min-width:760px){
+  html,body{background:#0c2e22}
+  #app{margin:28px auto 0;min-height:calc(100dvh - 28px);border-radius:30px 30px 0 0;overflow:clip;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+  .aside{position:fixed;left:max(24px,calc(50% - 520px));top:40px;width:260px;color:var(--mint);font-size:13px}
+  .aside .logo{color:var(--cream);height:46px;margin-bottom:14px}
+}
+@media (max-width:759px){.aside{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="aside" aria-hidden="true"><svg class="logo" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1197.69 484.13" aria-label="The Regular's Club" fill="currentColor"><path d="M413.63,58.44c16.73,0,32.13,8.49,40.98,22.67l67.78,108.03h33.46c-.12-.48-.48-.85-.73-1.33l-76.39-121.85c-14.06-22.55-38.43-36.01-65.11-36.01-3.52,0-7.15.24-10.43.73l-18.67,2.55C368.17,9.57,339.67-3.28,310.94.72l-160.89,22.19c-24.37,3.39-45.83,18.31-57.35,39.89L9.04,219.09c-12.97,24.25-11.88,53.83,2.67,77.11l76.39,121.85c14.19,22.55,38.56,36.01,65.23,36.01,3.52,0,7.03-.24,10.55-.73l18.43-2.55c14.31,20.85,37.59,33.34,63.05,33.34,3.52,0,7.03-.36,10.55-.73l161.02-22.19c21.82-3.03,41.34-15.28,53.35-33.46-8.85-2.3-17.34-5.82-25.46-10.43l-1.58-.85c-7.64,8.97-18.31,14.91-30.19,16.49l-160.89,22.19c-12.73,1.7-25.34-1.82-35.28-9.09l108.03-14.79c24.25-3.4,45.71-18.31,57.35-40.01l16.73-31.28c-10.43,3.76-21.95,5.82-35.53,5.94l-6.43,12c-7.28,13.58-20.73,22.92-36.01,25.1l-161.01,22.19c-19.04,2.67-37.59-6.18-47.65-22.31l-76.51-121.73c-9.21-14.79-9.82-33.34-1.58-48.62L117.79,76.26c7.28-13.58,20.73-23.04,36.13-25.1l160.89-22.19c2.3-.24,4.49-.49,6.67-.49,16.73,0,32.13,8.49,40.98,22.79l76.51,121.73c8,12.61,9.46,28.25,4.36,42.19,8.73-10.31,19.28-17.7,31.28-21.95-.85-12.37-4.73-24.49-11.52-35.4l-61.59-98.21,5.58-.73c2.06-.24,4.36-.48,6.55-.48Z"/><path d="M287.16,353.85c-19.69,0-35.41-3.96-47.17-12.02-7.79-5.42-15.33-13.22-22.46-23.52-6.74-10.17-13.21-17.84-24.44-17.84v53.38h-34.22v-179.43h34.22v.13c25.24.79,46.64,7.79,64.08,20.88,7.8,5.94,14.27,13.21,19.29,21.67,5.29,8.98,7.93,18.5,7.93,28.54,0,16.38-8.06,30.52-21.41,40.03-6.74,4.89-14,8.46-21.8,10.71,7.67,12.15,17.97,23.25,45.98,23.25v34.22ZM211.45,266.25c10.17,0,22.46-1.98,31.58-8.06,4.49-3.04,6.87-7.14,7.27-12.55-.4-8.72-5.15-16.38-14-23.13-11.36-8.59-25.77-13.08-43.21-13.74v57.48h18.37Z"/><path d="M326.24,343.54c-10.97-6.87-19.69-16.12-26.16-27.62-6.47-11.49-9.78-24.31-9.78-38.31s3.3-26.96,9.78-38.45c6.48-11.49,15.19-20.75,26.16-27.62,10.97-6.87,23.12-10.3,36.47-10.3,17.84,0,35.01,8.06,45.19,22.59,5.02,7.27,7.67,15.99,8.06,26.16-.13,14.27-5.29,26.03-15.46,35.41-10.7,9.38-24.71,14.14-41.75,14.14-12.02,0-23.39-2.91-34.09-8.72,2.78,8.59,7.66,15.46,14.53,20.75,6.74,5.41,14.67,8.06,23.52,8.06,22.2,0,36.33-9.51,51.79-23.65l20.87,26.16c-22.06,19.95-40.96,31.71-72.67,31.71-13.35,0-25.5-3.44-36.47-10.3ZM382.39,255.94c.79-2.11,1.19-3.83,1.19-5.29,0-4.89-2.64-8.85-8.06-12.16-3.43-1.98-7.66-3.04-12.81-3.04-13.61,0-25.5,7-32.9,17.97,8.59,7.93,18.23,11.89,28.94,11.89,14.14,0,21.94-5.02,23.65-9.38Z"/><path d="M450.8,406.83l12.42-32.9c9.38,7.27,20.48,10.97,33.56,10.97,20.08,0,31.05-15.32,31.05-34.62v-15.46c-11.1,12.68-24.05,19.03-38.84,19.03-22.2,0-37.79-12.15-46.78-30.26-4.62-9.12-7.27-17.31-8.06-24.58-.79-7.26-1.19-12.81-1.19-16.65,0-18.89,4.62-35.94,13.74-50.87,10.97-17.97,28.67-30.26,53.11-30.26,9.91,0,19.16,3.3,28.01,10.04v-10.04h34.22v149.04c0,25.5-11.49,47.43-31.05,59.72-9.78,6.08-21.14,9.12-34.22,9.12-16.25,0-31.58-4.09-45.98-12.29ZM516.2,300.6c6.61-11.5,10.44-24.84,11.63-39.77v-8.59c-6.87-10.17-17.84-16.78-28.01-16.78-13.74,0-22.99,9.12-28.01,21.8-5.02,12.68-4.76,21.93-4.76,25.1,0,13.48,3.04,23.79,9.12,31.05,3.3,4.1,7.66,6.21,12.82,6.21,10.97,0,19.95-6.34,27.22-19.03Z"/><path d="M706.96,353.85h-34.22v-13.74c-9.91,9.12-21.14,13.74-33.56,13.74-17.84,0-31.71-7.27-41.89-21.93-9.38-13.35-14-29.73-14.14-49.16v-81.52h34.22v81.52h-.13c0,19.16,7.66,36.87,21.93,36.87,15.86,0,27.62-14.8,33.56-33.3v-85.09h34.22v152.61Z"/><path d="M762.19,353.85h-34.09v-179.43h34.09v179.43Z"/><path d="M908.54,353.85h-32.51v-16.78c-12.68,11.23-27.22,16.78-43.6,16.78-18.5,0-35.15-4.76-44.79-16.52-4.89-5.95-7.27-13.87-7.27-23.78,0-18.37,7-28.14,16.91-33.03,9.91-4.89,19.69-5.42,26.69-5.42l4.49.14c4.76-.14,7.14-1.32,7.14-3.44,0-2.78-2.91-4.76-8.72-5.95-15.06-5.94-22.59-15.86-22.59-29.6,0-10.57,5.29-18.89,15.86-25.1,9.38-5.42,20.21-8.19,32.37-8.19,18.1,0,31.97,5.15,41.62,15.46,9.64,10.44,14.4,24.71,14.4,42.94v92.49ZM861.5,314.61c8.59-7.14,12.82-17.31,12.82-30.52v-31.05c0-7.53-2.11-13.35-6.21-17.44s-9.12-6.21-14.93-6.21c-11.63,0-16.38,5.02-16.38,9.78,0,3.04,1.59,5.42,4.76,7.4,5.42,3.04,12.03,5.02,17.84,8.32,6.61,3.83,9.91,10.04,9.91,18.63,0,5.41-1.46,9.64-4.49,12.95-7.4,8.06-18.23,12.29-32.37,12.55-11.1.14-19.56,3.83-19.56,11.63,0,4.1,2.25,7.4,6.61,9.65,4.36,2.38,9.65,3.57,15.86,3.57,10.17-.14,18.89-3.3,26.16-9.25Z"/><path d="M964,353.85h-34.22v-152.61h34.22v11.76c9.11-7.79,20.21-11.76,33.56-11.76,24.84,0,41.36,15.46,49.68,36.33l-30.92,14.27c-4.1-10.7-11.23-16.52-19.16-16.52-8.85,0-17.71,4.49-23.52,14.14-6.87,11.76-9.64,30.12-9.64,52.98v51.4Z"/><path d="M1051.32,205c11.74-7.41,17.66-15.46,17.83-24.32l-1.39.41c-5.33,1.55-10.58,1.01-15.58-1.53-5.13-2.5-8.53-6.6-10.22-12.44-1.59-5.45-1.01-10.58,1.77-15.65,2.79-5.08,6.8-8.31,12.26-9.89,5.97-1.74,11.38-1.11,16.11,1.92,5.92,3.78,10.03,9.88,12.5,18.38,2.8,9.64,3.2,23.29-5.03,38.06-4.05,7.37-10.4,13.9-19.11,19.46l-9.15-14.4Z"/><path d="M1087.49,337.86l-13.87-10.05,19.95-27.75c9.38,6.74,17.97,13.88,28.28,16.91,5.15,1.46,10.3,2.25,15.59,2.25,7.79,0,14.54-1.85,20.22-5.68,3.97-2.65,5.95-5.29,5.95-7.93,0-4.89-3.7-8.19-11.1-10.04-3.83-.93-8.33-1.32-13.48-1.32-1.19,0-2.38,0-3.3.13-1.98.14-3.83.27-5.81.27-14.67,0-26.96-3.96-36.87-11.76-10.83-9.38-16.25-20.62-16.25-33.96s6.87-25.76,17.44-34.22c11.1-8.98,24.44-13.48,40.17-13.48,18.5,0,33.03,5.29,48.36,15.19l14.27,9.25-18.49,28.67c-9.51-6.21-19.29-13.21-28.41-16.51-4.62-1.59-9.78-2.38-15.72-2.38-7.66,0-13.87,1.85-18.63,5.68-3.17,2.64-4.76,5.29-4.76,7.79,0,3.57,1.32,6.08,3.97,7.8,2.64,1.72,5.42,2.77,8.19,3.17,2.78.4,5.02.53,7,.53l9.25-.4c14.27,0,26.69,3.04,37.26,9.11,14,8.06,21.01,20.22,21.01,36.47,0,30.78-32.77,47.83-60.25,47.83-18.63,0-35.28-5.16-49.94-15.59Z"/><path d="M735.07,414.41c0-20.27,15.13-34.11,34.11-34.11,13.84,0,22.04,6.92,26.99,14.83l-9.9,5.04c-3.16-5.44-9.48-9.59-17.1-9.59-12.56,0-22.25,9.98-22.25,23.82s9.7,23.82,22.25,23.82c7.61,0,13.94-4.05,17.1-9.58l9.9,5.04c-5.04,7.91-13.15,14.83-26.99,14.83-18.98,0-34.11-13.84-34.11-34.11Z"/><path d="M805.14,447.33v-65.95h11.57v55.76h29.07v10.18h-40.64Z"/><path d="M852.91,381.39h11.67v39.55c0,10.48,5.84,17.3,16.91,17.3s16.81-6.82,16.81-17.3v-39.55h11.66v39.84c0,16.41-9.39,27.29-28.47,27.29s-28.58-10.98-28.58-27.19v-39.94Z"/><path d="M923.94,447.33v-65.95h32.44c12.06,0,18.78,7.51,18.78,16.81,0,8.31-5.34,13.84-11.47,15.13,7.03,1.09,12.75,8.11,12.75,16.21,0,10.18-6.83,17.8-19.18,17.8h-33.32ZM935.51,408.67h18.5c5.93,0,9.29-3.56,9.29-8.5s-3.36-8.61-9.29-8.61h-18.5v17.1ZM935.51,437.15h18.98c6.33,0,10.08-3.46,10.08-9.19,0-4.95-3.46-9.1-10.08-9.1h-18.98v18.29Z"/><path d="M177.81,154.21v-52.9h-18.94v-9.66h48.87v9.66h-18.94v52.9h-10.98Z"/><path d="M259.07,154.21v-27.3h-32.55v27.3h-10.98v-62.57h10.98v25.61h32.55v-25.61h10.98v62.57h-10.98Z"/><path d="M283.47,154.21v-62.57h42.87v9.66h-31.9v16.23h31.24v9.66h-31.24v17.35h31.9v9.66h-42.87Z"/></svg><p>Concept rebuild of the ordering app. Demo data. Best on a phone.</p></div>
+
+<div id="app">
+  <!-- MENU -->
+  <section class="view active" id="v-menu" aria-label="Menu">
+    <div class="top">
+      <div class="hi"><small>Hi,</small><span id="hiName">there</span></div>
+      <svg class="logo" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1197.69 484.13" aria-label="The Regular's Club" fill="currentColor"><path d="M413.63,58.44c16.73,0,32.13,8.49,40.98,22.67l67.78,108.03h33.46c-.12-.48-.48-.85-.73-1.33l-76.39-121.85c-14.06-22.55-38.43-36.01-65.11-36.01-3.52,0-7.15.24-10.43.73l-18.67,2.55C368.17,9.57,339.67-3.28,310.94.72l-160.89,22.19c-24.37,3.39-45.83,18.31-57.35,39.89L9.04,219.09c-12.97,24.25-11.88,53.83,2.67,77.11l76.39,121.85c14.19,22.55,38.56,36.01,65.23,36.01,3.52,0,7.03-.24,10.55-.73l18.43-2.55c14.31,20.85,37.59,33.34,63.05,33.34,3.52,0,7.03-.36,10.55-.73l161.02-22.19c21.82-3.03,41.34-15.28,53.35-33.46-8.85-2.3-17.34-5.82-25.46-10.43l-1.58-.85c-7.64,8.97-18.31,14.91-30.19,16.49l-160.89,22.19c-12.73,1.7-25.34-1.82-35.28-9.09l108.03-14.79c24.25-3.4,45.71-18.31,57.35-40.01l16.73-31.28c-10.43,3.76-21.95,5.82-35.53,5.94l-6.43,12c-7.28,13.58-20.73,22.92-36.01,25.1l-161.01,22.19c-19.04,2.67-37.59-6.18-47.65-22.31l-76.51-121.73c-9.21-14.79-9.82-33.34-1.58-48.62L117.79,76.26c7.28-13.58,20.73-23.04,36.13-25.1l160.89-22.19c2.3-.24,4.49-.49,6.67-.49,16.73,0,32.13,8.49,40.98,22.79l76.51,121.73c8,12.61,9.46,28.25,4.36,42.19,8.73-10.31,19.28-17.7,31.28-21.95-.85-12.37-4.73-24.49-11.52-35.4l-61.59-98.21,5.58-.73c2.06-.24,4.36-.48,6.55-.48Z"/><path d="M287.16,353.85c-19.69,0-35.41-3.96-47.17-12.02-7.79-5.42-15.33-13.22-22.46-23.52-6.74-10.17-13.21-17.84-24.44-17.84v53.38h-34.22v-179.43h34.22v.13c25.24.79,46.64,7.79,64.08,20.88,7.8,5.94,14.27,13.21,19.29,21.67,5.29,8.98,7.93,18.5,7.93,28.54,0,16.38-8.06,30.52-21.41,40.03-6.74,4.89-14,8.46-21.8,10.71,7.67,12.15,17.97,23.25,45.98,23.25v34.22ZM211.45,266.25c10.17,0,22.46-1.98,31.58-8.06,4.49-3.04,6.87-7.14,7.27-12.55-.4-8.72-5.15-16.38-14-23.13-11.36-8.59-25.77-13.08-43.21-13.74v57.48h18.37Z"/><path d="M326.24,343.54c-10.97-6.87-19.69-16.12-26.16-27.62-6.47-11.49-9.78-24.31-9.78-38.31s3.3-26.96,9.78-38.45c6.48-11.49,15.19-20.75,26.16-27.62,10.97-6.87,23.12-10.3,36.47-10.3,17.84,0,35.01,8.06,45.19,22.59,5.02,7.27,7.67,15.99,8.06,26.16-.13,14.27-5.29,26.03-15.46,35.41-10.7,9.38-24.71,14.14-41.75,14.14-12.02,0-23.39-2.91-34.09-8.72,2.78,8.59,7.66,15.46,14.53,20.75,6.74,5.41,14.67,8.06,23.52,8.06,22.2,0,36.33-9.51,51.79-23.65l20.87,26.16c-22.06,19.95-40.96,31.71-72.67,31.71-13.35,0-25.5-3.44-36.47-10.3ZM382.39,255.94c.79-2.11,1.19-3.83,1.19-5.29,0-4.89-2.64-8.85-8.06-12.16-3.43-1.98-7.66-3.04-12.81-3.04-13.61,0-25.5,7-32.9,17.97,8.59,7.93,18.23,11.89,28.94,11.89,14.14,0,21.94-5.02,23.65-9.38Z"/><path d="M450.8,406.83l12.42-32.9c9.38,7.27,20.48,10.97,33.56,10.97,20.08,0,31.05-15.32,31.05-34.62v-15.46c-11.1,12.68-24.05,19.03-38.84,19.03-22.2,0-37.79-12.15-46.78-30.26-4.62-9.12-7.27-17.31-8.06-24.58-.79-7.26-1.19-12.81-1.19-16.65,0-18.89,4.62-35.94,13.74-50.87,10.97-17.97,28.67-30.26,53.11-30.26,9.91,0,19.16,3.3,28.01,10.04v-10.04h34.22v149.04c0,25.5-11.49,47.43-31.05,59.72-9.78,6.08-21.14,9.12-34.22,9.12-16.25,0-31.58-4.09-45.98-12.29ZM516.2,300.6c6.61-11.5,10.44-24.84,11.63-39.77v-8.59c-6.87-10.17-17.84-16.78-28.01-16.78-13.74,0-22.99,9.12-28.01,21.8-5.02,12.68-4.76,21.93-4.76,25.1,0,13.48,3.04,23.79,9.12,31.05,3.3,4.1,7.66,6.21,12.82,6.21,10.97,0,19.95-6.34,27.22-19.03Z"/><path d="M706.96,353.85h-34.22v-13.74c-9.91,9.12-21.14,13.74-33.56,13.74-17.84,0-31.71-7.27-41.89-21.93-9.38-13.35-14-29.73-14.14-49.16v-81.52h34.22v81.52h-.13c0,19.16,7.66,36.87,21.93,36.87,15.86,0,27.62-14.8,33.56-33.3v-85.09h34.22v152.61Z"/><path d="M762.19,353.85h-34.09v-179.43h34.09v179.43Z"/><path d="M908.54,353.85h-32.51v-16.78c-12.68,11.23-27.22,16.78-43.6,16.78-18.5,0-35.15-4.76-44.79-16.52-4.89-5.95-7.27-13.87-7.27-23.78,0-18.37,7-28.14,16.91-33.03,9.91-4.89,19.69-5.42,26.69-5.42l4.49.14c4.76-.14,7.14-1.32,7.14-3.44,0-2.78-2.91-4.76-8.72-5.95-15.06-5.94-22.59-15.86-22.59-29.6,0-10.57,5.29-18.89,15.86-25.1,9.38-5.42,20.21-8.19,32.37-8.19,18.1,0,31.97,5.15,41.62,15.46,9.64,10.44,14.4,24.71,14.4,42.94v92.49ZM861.5,314.61c8.59-7.14,12.82-17.31,12.82-30.52v-31.05c0-7.53-2.11-13.35-6.21-17.44s-9.12-6.21-14.93-6.21c-11.63,0-16.38,5.02-16.38,9.78,0,3.04,1.59,5.42,4.76,7.4,5.42,3.04,12.03,5.02,17.84,8.32,6.61,3.83,9.91,10.04,9.91,18.63,0,5.41-1.46,9.64-4.49,12.95-7.4,8.06-18.23,12.29-32.37,12.55-11.1.14-19.56,3.83-19.56,11.63,0,4.1,2.25,7.4,6.61,9.65,4.36,2.38,9.65,3.57,15.86,3.57,10.17-.14,18.89-3.3,26.16-9.25Z"/><path d="M964,353.85h-34.22v-152.61h34.22v11.76c9.11-7.79,20.21-11.76,33.56-11.76,24.84,0,41.36,15.46,49.68,36.33l-30.92,14.27c-4.1-10.7-11.23-16.52-19.16-16.52-8.85,0-17.71,4.49-23.52,14.14-6.87,11.76-9.64,30.12-9.64,52.98v51.4Z"/><path d="M1051.32,205c11.74-7.41,17.66-15.46,17.83-24.32l-1.39.41c-5.33,1.55-10.58,1.01-15.58-1.53-5.13-2.5-8.53-6.6-10.22-12.44-1.59-5.45-1.01-10.58,1.77-15.65,2.79-5.08,6.8-8.31,12.26-9.89,5.97-1.74,11.38-1.11,16.11,1.92,5.92,3.78,10.03,9.88,12.5,18.38,2.8,9.64,3.2,23.29-5.03,38.06-4.05,7.37-10.4,13.9-19.11,19.46l-9.15-14.4Z"/><path d="M1087.49,337.86l-13.87-10.05,19.95-27.75c9.38,6.74,17.97,13.88,28.28,16.91,5.15,1.46,10.3,2.25,15.59,2.25,7.79,0,14.54-1.85,20.22-5.68,3.97-2.65,5.95-5.29,5.95-7.93,0-4.89-3.7-8.19-11.1-10.04-3.83-.93-8.33-1.32-13.48-1.32-1.19,0-2.38,0-3.3.13-1.98.14-3.83.27-5.81.27-14.67,0-26.96-3.96-36.87-11.76-10.83-9.38-16.25-20.62-16.25-33.96s6.87-25.76,17.44-34.22c11.1-8.98,24.44-13.48,40.17-13.48,18.5,0,33.03,5.29,48.36,15.19l14.27,9.25-18.49,28.67c-9.51-6.21-19.29-13.21-28.41-16.51-4.62-1.59-9.78-2.38-15.72-2.38-7.66,0-13.87,1.85-18.63,5.68-3.17,2.64-4.76,5.29-4.76,7.79,0,3.57,1.32,6.08,3.97,7.8,2.64,1.72,5.42,2.77,8.19,3.17,2.78.4,5.02.53,7,.53l9.25-.4c14.27,0,26.69,3.04,37.26,9.11,14,8.06,21.01,20.22,21.01,36.47,0,30.78-32.77,47.83-60.25,47.83-18.63,0-35.28-5.16-49.94-15.59Z"/><path d="M735.07,414.41c0-20.27,15.13-34.11,34.11-34.11,13.84,0,22.04,6.92,26.99,14.83l-9.9,5.04c-3.16-5.44-9.48-9.59-17.1-9.59-12.56,0-22.25,9.98-22.25,23.82s9.7,23.82,22.25,23.82c7.61,0,13.94-4.05,17.1-9.58l9.9,5.04c-5.04,7.91-13.15,14.83-26.99,14.83-18.98,0-34.11-13.84-34.11-34.11Z"/><path d="M805.14,447.33v-65.95h11.57v55.76h29.07v10.18h-40.64Z"/><path d="M852.91,381.39h11.67v39.55c0,10.48,5.84,17.3,16.91,17.3s16.81-6.82,16.81-17.3v-39.55h11.66v39.84c0,16.41-9.39,27.29-28.47,27.29s-28.58-10.98-28.58-27.19v-39.94Z"/><path d="M923.94,447.33v-65.95h32.44c12.06,0,18.78,7.51,18.78,16.81,0,8.31-5.34,13.84-11.47,15.13,7.03,1.09,12.75,8.11,12.75,16.21,0,10.18-6.83,17.8-19.18,17.8h-33.32ZM935.51,408.67h18.5c5.93,0,9.29-3.56,9.29-8.5s-3.36-8.61-9.29-8.61h-18.5v17.1ZM935.51,437.15h18.98c6.33,0,10.08-3.46,10.08-9.19,0-4.95-3.46-9.1-10.08-9.1h-18.98v18.29Z"/><path d="M177.81,154.21v-52.9h-18.94v-9.66h48.87v9.66h-18.94v52.9h-10.98Z"/><path d="M259.07,154.21v-27.3h-32.55v27.3h-10.98v-62.57h10.98v25.61h32.55v-25.61h10.98v62.57h-10.98Z"/><path d="M283.47,154.21v-62.57h42.87v9.66h-31.9v16.23h31.24v9.66h-31.24v17.35h31.9v9.66h-42.87Z"/></svg>
+    </div>
+    <p class="demo"><i></i>Concept build. Demo data, nothing gets ordered.</p>
+    <button class="pass" id="pass" aria-label="Your plan">
+      <div class="pass-row">
+        <div class="pass-left" id="passLeft"></div>
+        <div class="pass-end" id="passEnd"></div>
+      </div>
+      <div class="stamps" id="stamps" aria-hidden="true"></div>
+    </button>
+    <div class="meals" id="meals" role="group" aria-label="Which meal"></div>
+
+    <div class="table on-table">
+      <div class="bar" id="bar">
+        <div class="tabs" role="tablist" id="tabs"></div>
+        <div class="chips" id="chips" role="group" aria-label="Filter by goal"></div>
+      </div>
+      <div id="menuList"></div>
+    </div>
+  </section>
+
+  <!-- ORDERS -->
+  <section class="view" id="v-orders" aria-label="Orders">
+    <div class="page">
+      <h1 class="page-h">Orders</h1>
+      <p class="page-s" id="ordSub"></p>
+      <div id="ordUp"></div>
+      <h2 class="sub">Delivered</h2>
+      <div id="ordPast"></div>
+    </div>
+  </section>
+
+  <!-- PLAN -->
+  <section class="view" id="v-plan" aria-label="Plan">
+    <div class="page">
+      <h1 class="page-h">Your plan</h1>
+      <p class="page-s" id="planSub"></p>
+      <div class="card">
+        <div class="pass-row"><div class="pass-left" id="planLeft"></div><div class="pass-end" id="planEnd"></div></div>
+        <div class="stamps" id="planStamps" aria-hidden="true"></div>
+      </div>
+      <h2 class="sub">So far on this plan</h2>
+      <div class="stats" id="planStats"></div>
+      <h2 class="sub">Renew</h2>
+      <div class="card">
+        <div class="seg" id="sizeSeg" role="group" aria-label="Portion size">
+          <button data-size="Small" aria-pressed="true">Small</button><button data-size="Regular" aria-pressed="false">Regular</button>
+        </div>
+        <div class="plans" id="plans" role="group" aria-label="Number of meals"></div>
+        <div class="code"><input id="coupon" placeholder="Coupon code" aria-label="Coupon code" autocomplete="off"><button class="btn ghost" id="applyCoupon">Apply</button></div>
+        <button class="btn wide" id="renewBtn" style="margin-top:12px"></button>
+      </div>
+      <h2 class="sub">Refer a friend</h2>
+      <div class="card">
+        <p style="font-size:14px">Your friend gets 1 extra meal on their first plan and you get 1 too, up to 10.</p>
+        <div class="code"><input value="DEV-DEMO" readonly aria-label="Your referral code"><button class="btn" id="shareRef">Share</button></div>
+      </div>
+      <h2 class="sub">Help and account</h2>
+      <div class="card" style="padding:2px 14px">
+        <button class="list-btn" data-sheet="issue">Report a problem with an order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 5 7 7-7 7"/></svg></button>
+        <button class="list-btn" data-sheet="callback">Ask us to call you <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 5 7 7-7 7"/></svg></button>
+        <button class="list-btn" data-act="invoices">Invoices <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 5 7 7-7 7"/></svg></button>
+        <button class="list-btn" data-act="gst">Add GSTIN for invoices <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 5 7 7-7 7"/></svg></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- DONE -->
+  <section class="view" id="v-done" aria-live="polite">
+    <div class="stamps" id="doneStamps" aria-hidden="true"></div>
+    <h1 class="done-h" id="doneH">Booked</h1>
+    <p class="done-p" id="doneP"></p>
+    <div class="ticket" id="doneTicket"></div>
+    <p class="foot-note" style="margin-top:14px">Demo: nothing was sent to the kitchen.</p>
+    <div style="display:grid;gap:10px;margin-top:22px">
+      <button class="btn wide" data-go="orders">See my orders</button>
+      <button class="btn wide ghost" data-go="menu">Back to menu</button>
+    </div>
+  </section>
+</div>
+
+<div class="cartbar" id="cartbar" aria-live="polite">
+  <div class="l" id="cartText"></div>
+  <button class="btn" id="reviewBtn">Review order</button>
+</div>
+
+<nav aria-label="Main">
+  <button data-go="menu" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 11h18a9 9 0 0 1-18 0Z"/><path d="M8 7c1-1 1-2 0-3M12 7c1-1 1-2 0-3M16 7c1-1 1-2 0-3"/></svg>Menu</button>
+  <button data-go="orders"><span class="dot" id="ordDot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg></span>Orders</button>
+  <button data-go="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="3"/><circle cx="8" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="16" cy="12" r="1.6"/></svg>Plan</button>
+</nav>
+
+<div class="scrim" id="scrim"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const D = {"customer":{"first_name":"Dev","plan_type":"Small","plan_meals":10,"bonus_meals":1,"meals_used":5,"outlet_name":"JVPD"},"cats":["Salads","Bowls","Wraps"],"dishes":[{"id":"classic-caesar-salad","name":"Classic Caesar Salad","desc":"Lettuce, kale, grilled paneer, cherry tomatoes, oven-roasted croutons, fresh cucumber, sugar-free classic caesar dressing with no added preservatives.","cat":"Salads","vt":"veg","kcal":610,"p":27,"c":14,"f":47},{"id":"tandoori-paneer-avocado-salad","name":"Tandoori Paneer & Avocado Salad","desc":"Lettuce, arugula, paneer with tandoori drizzle, hass avocado, fresh cucumber, pickled onion, roasted red peppers, sugar-free tamarind dressing with no added preservatives.","cat":"Salads","vt":"veg","kcal":491,"p":21,"c":25,"f":36},{"id":"mexican-california-salad","name":"Mexican California Salad","desc":"Lettuce, kale, mushroom, avocado, black beans, cheese, fresh tomato salsa, crushed chips, sugar-free chipotle honey dressing with no added preservatives.","cat":"Salads","vt":"veg","kcal":466,"p":15,"c":38,"f":27},{"id":"korean-chilli-crunch-paneer-salad","name":"Korean Chilli Crunch Paneer Salad","desc":"Iceberg lettuce, red cabbage, herbed paneer, fresh green cucumber, pickled onion, kimchi, furikake, sugar-free hot gochujang dressing with no added preservatives.","cat":"Salads","vt":"veg","kcal":442,"p":26,"c":62,"f":38},{"id":"avo-crunch-salad-new-recipe","name":"Avo Crunch Salad (New Recipe)","desc":"Lettuce, arugula, avocado, tomato confit, feta cheese, cherry tomatoes, pickled onion, pumpkin seeds, sugar-free honey mustard dressing with no added preservatives.","cat":"Salads","vt":"veg","kcal":448,"p":8,"c":21,"f":38},{"id":"greek-falafel-salad","name":"Greek Falafel Salad","desc":"Lettuce, arugula, falafel bullets, cucumber, diced tomatoes, olives, feta cheese, pickled onion, pumpkin seeds, sugar-free french vinaigrette dressing with no added preservatives.","cat":"Salads","vt":"veg","kcal":450,"p":15,"c":29,"f":30},{"id":"harvest-bowl","name":"Harvest Bowl","desc":"Quinoa, choice of tofu/paneer, broccoli, roasted zucchini, pickled onion, red cabbage, lettuce, arugula, pumpkin seeds, sugar-free honey mustard dressing with no added preservatives.","cat":"Bowls","vt":"veg","kcal":601,"p":25,"c":28,"f":43},{"id":"mediterranean-bowl","name":"Mediterranean Bowl","desc":"Quinoa, falafel bullets, diced tomatoes, olives, hummus, feta cheese, lettuce, arugula, sugar-free lemon tahina dressing with no added preservatives.","cat":"Bowls","vt":"veg","kcal":491,"p":19,"c":37,"f":28},{"id":"mexican-chipotle-bowl","name":"Mexican Chipotle Bowl","desc":"Brown rice, choice of paneer/tofu, black beans, roasted bell peppers, cheese, lettuce, kale, chile corn salsa, sour cream with our in-house salsa​.","cat":"Bowls","vt":"veg","kcal":642,"p":34,"c":47,"f":35},{"id":"korean-kimchi-paneer-bowl","name":"Korean Kimchi Paneer Bowl","desc":"Brown rice, herbed paneer, mushroom, kale, kimchi, furikake, sugar-free hot gochujang dressing with no added preservatives.","cat":"Bowls","vt":"veg","kcal":497,"p":32,"c":75,"f":36},{"id":"paneer-shawarma-bowl","name":"Paneer Shawarma Bowl","desc":"Herbed paneer, brown rice, iceberg lettuce, arugula, hummus, cheese, fresh tomato salsa, spicy red salsa, cucumber, and sour cream.","cat":"Bowls","vt":"veg","kcal":584,"p":31,"c":30,"f":39},{"id":"falafel-shawarma-wrap","name":"Falafel Shawarma Wrap","desc":"Choice of whole wheat or flour tortilla, hummus, iceberg lettuce, spicy falafels, cucumber, pickled onions and eggless mayonnaise","cat":"Wraps","vt":"veg","kcal":644,"p":20,"c":62,"f":36},{"id":"paneer-caesar-salad-wrap","name":"Paneer Caesar Salad Wrap","desc":"Choice of whole wheat or flour tortilla, classic caesar dressing, iceberg lettuce, herbed paneer, cheese and croutons.","cat":"Wraps","vt":"veg","kcal":822,"p":35,"c":47,"f":50},{"id":"hummus-chipotle-paneer-wrap","name":"Hummus & Chipotle Paneer Wrap","desc":"Choice of whole wheat/flour tortilla filled with chipotle paneer, hummus, mixed lettuce, black beans, fresh tomato salsa","cat":"Wraps","vt":"veg","kcal":714,"p":34,"c":62,"f":35},{"id":"grilled-paneer-wrap","name":"Grilled Paneer Wrap","desc":"Choice of whole wheat/flour tortilla filled with herbed paneer, shredded cheese, chipotle mayo, fresh tomato salsa, iceberg lettuce.","cat":"Wraps","vt":"veg","kcal":839,"p":35,"c":47,"f":58},{"id":"korean-chilli-crunch-chicken-salad","name":"Korean Chilli Crunch Chicken Salad","desc":"Iceberg lettuce, red cabbage, herbed chicken, fresh green cucumber, pickled onion, kimchi, furikake, sugar-free hot gochujang dressing with no added preservatives.","cat":"Salads","vt":"nonveg","kcal":342,"p":27,"c":62,"f":24},{"id":"greek-chicken-salad","name":"Greek Chicken Salad","desc":"Lettuce, arugula, roasted chicken, cucumber, diced tomatoes, olives, feta cheese, pickled onion, pumpkin seeds, sugar-free french vinaigrette dressing with no added preservatives.","cat":"Salads","vt":"nonveg","kcal":433,"p":25,"c":17,"f":28},{"id":"mexican-california-chicken-salad","name":"Mexican California Chicken Salad","desc":"Lettuce, kale, chipotle chicken, avocado, black beans, cheese, fresh tomato salsa, crushed chips, sugar-free chipotle honey dressing with no added preservatives.","cat":"Salads","vt":"nonveg","kcal":498,"p":27,"c":30,"f":27},{"id":"tandoori-chicken-avocado-salad","name":"Tandoori Chicken & Avocado Salad","desc":"Lettuce, arugula, chicken with tandoori drizzle, hass avocado, fresh cucumber, pickled onion, roasted red peppers, sugar-free tamarind dressing with no added preservatives.","cat":"Salads","vt":"nonveg","kcal":381,"p":20,"c":25,"f":22},{"id":"classic-chicken-caesar-salad","name":"Classic Chicken Caesar Salad","desc":"Lettuce, kale, roasted chicken, cherry tomatoes, oven-roasted croutons, fresh cucumber, sugar-free classic caesar dressing with no added preservatives.","cat":"Salads","vt":"nonveg","kcal":500,"p":27,"c":13,"f":32},{"id":"char-grilled-chicken-caesar-salad","name":"Char-grilled Chicken Caesar Salad","desc":"Lettuce, kale, char-grilled chicken, cherry tomatoes, oven-roasted croutons, fresh cucumber, sugar-free classic caesar dressing with no added preservatives.","cat":"Salads","vt":"nonveg","kcal":508,"p":24,"c":11,"f":36},{"id":"korean-kimchi-chicken-bowl","name":"Korean Kimchi Chicken Bowl","desc":"Brown rice, herbed chicken, mushroom, kale, kimchi, furikake, sugar-free hot gochujang dressing with no added preservatives.","cat":"Bowls","vt":"nonveg","kcal":397,"p":33,"c":75,"f":22},{"id":"mediterranean-chicken-bowl","name":"Mediterranean Chicken Bowl","desc":"Quinoa, roasted chicken, diced tomatoes, olives, hummus, feta cheese, lettuce, arugula, sugar-free lemon tahina dressing with no added preservatives.","cat":"Bowls","vt":"nonveg","kcal":474,"p":28,"c":26,"f":26},{"id":"mexican-chipotle-chicken-bowl","name":"Mexican Chipotle Chicken Bowl","desc":"Brown rice, chipotle chicken, black beans, roasted bell peppers, cheese, lettuce, kale, chile corn salsa, sour cream with our in-house salsa","cat":"Bowls","vt":"nonveg","kcal":532,"p":33,"c":46,"f":21},{"id":"harvest-chicken-bowl","name":"Harvest Chicken Bowl","desc":"Quinoa, roasted chicken, broccoli, roasted zucchini, pickled onion, red cabbage, lettuce, arugula, pumpkin seeds, sugar-free honey mustard dressing with no added preservatives.","cat":"Bowls","vt":"nonveg","kcal":491,"p":25,"c":28,"f":29},{"id":"char-grilled-chicken-shawarma-bowl","name":"Char Grilled Chicken Shawarma Bowl","desc":"Char-grilled chicken, brown rice, iceberg lettuce, arugula, hummus, cheese, fresh tomato salsa, spicy red salsa, cucumber, and sour cream.","cat":"Bowls","vt":"nonveg","kcal":482,"p":28,"c":27,"f":29},{"id":"chicken-caesar-salad-wrap","name":"Chicken Caesar Salad Wrap","desc":"Choice of whole wheat or flour tortilla, classic caesar dressing, iceberg lettuce, spice rub chicken, cheese and croutons.","cat":"Wraps","vt":"nonveg","kcal":712,"p":35,"c":46,"f":36},{"id":"hummus-chipotle-chicken-wrap","name":"Hummus & Chipotle Chicken Wrap","desc":"Choice of whole wheat/flour tortilla filled with chipotle chicken, hummus, mixed lettuce, black beans, fresh tomato salsa","cat":"Wraps","vt":"nonveg","kcal":614,"p":37,"c":62,"f":22},{"id":"shawarma-char-grilled-chicken-wrap","name":"Shawarma Char-grilled Chicken Wrap","desc":"Choice of whole wheat or flour tortilla, hummus, eggless mayonnaise, iceberg lettuce, char-grilled chicken, cucumber, and pickled onions.","cat":"Wraps","vt":"nonveg","kcal":698,"p":26,"c":50,"f":45},{"id":"grilled-chicken-wrap","name":"Grilled Chicken Wrap","desc":"Choice of whole wheat/flour tortilla filled with roasted chicken, shredded cheese, chipotle mayo, fresh tomato salsa, iceberg lettuce.","cat":"Wraps","vt":"nonveg","kcal":739,"p":39,"c":46,"f":45}],"opt_groups":{"groups":[{"name":"A. Choice of Veg Protein","title":"Choice of Veg Protein","max":1,"swap":true,"options":[{"name":"Paneer","label":"Paneer","price":0,"vt":"veg"},{"name":"Tofu","label":"Tofu","price":50,"vt":"veg"}]},{"name":"L. Select Tortilla - (H)","title":"Select Tortilla","max":1,"swap":false,"options":[{"name":"Flour Tortilla","label":"Flour Tortilla","price":0,"vt":"veg"},{"name":"Whole Wheat Tortilla","label":"Whole Wheat Tortilla","price":15,"vt":"veg"}]},{"name":"B. Add Protein and Veggie Boosts (Veg & Non-veg)","title":"Make it Protein Rich","max":1,"swap":false,"options":[{"name":"Extra Herbed Paneer","label":"Extra Herbed Paneer","price":60,"vt":"veg"},{"name":"Extra Herbed Chicken","label":"Extra Herbed Chicken","price":70,"vt":"nonveg"},{"name":"Extra Herbed Tofu","label":"Extra Herbed Tofu","price":90,"vt":"veg"}]},{"name":"D. Make it more flavorful","title":"Make it More Flavourful","max":1,"swap":false,"options":[{"name":"Feta Cheese","label":"Feta Cheese","price":70,"vt":"veg"},{"name":"Hummus","label":"Hummus","price":50,"vt":"veg"},{"name":"Classic Caesar Dressing","label":"Classic Caesar Dressing","price":50,"vt":"veg"}]},{"name":"H. Dips","title":"Add Dips","max":1,"swap":false,"options":[{"name":"Chipotle Mayo Dip","label":"Chipotle Mayo Dip","price":40,"vt":"veg"},{"name":"Hummus","label":"Hummus","price":50,"vt":"veg"},{"name":"Extra Sour Cream","label":"Extra Sour Cream","price":30,"vt":"veg"}]},{"name":"C. Add Crunch & Texture","title":"Add Crunch and Texture","max":1,"swap":false,"options":[{"name":"Pumpkin Seeds","label":"Pumpkin Seeds","price":30,"vt":"veg"},{"name":"Spicy Almonds","label":"Spicy Almonds","price":30,"vt":"veg"},{"name":"Jalapenos","label":"Jalapenos","price":30,"vt":"veg"}]},{"name":"G. Add grain","title":"Add Grains","max":1,"swap":false,"options":[{"name":"Brown rice","label":"Brown rice","price":40,"vt":"veg"},{"name":"Quinoa","label":"Quinoa","price":50,"vt":"veg"}]},{"name":"F. Make it a Meal (Sides & Drinks)","title":"Make it a Meal","max":1,"swap":false,"options":[{"name":"Mixed Berry Cooler","label":"Mixed Berry Cooler","price":99,"vt":"veg"},{"name":"Lemon Iced Tea - 250ml","label":"Lemon Iced Tea - 250ml","price":99,"vt":"veg"}]}],"by_dish":{"Korean Kimchi Chicken Bowl":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Mediterranean Chicken Bowl":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Mexican Chipotle Chicken Bowl":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Harvest Chicken Bowl":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Mint Yogurt Chicken Bowl":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Char Grilled Chicken Shawarma Bowl":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Korean Chilli Crunch Chicken Salad":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Greek Chicken Salad":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Mexican California Chicken Salad":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Tandoori Chicken & Avocado Salad":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Classic Chicken Caesar Salad":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Guac High Protein Chicken Salad":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Char-grilled Chicken Caesar Salad":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Chicken Caesar Salad Wrap":["L. Select Tortilla - (H)","B. Add Protein and Veggie Boosts (Veg & Non-veg)","H. Dips"],"Hummus & Chipotle Chicken Wrap":["L. Select Tortilla - (H)","B. Add Protein and Veggie Boosts (Veg & Non-veg)","H. Dips"],"Shawarma Char-grilled Chicken Wrap":["L. Select Tortilla - (H)","B. Add Protein and Veggie Boosts (Veg & Non-veg)","H. Dips"],"Grilled Chicken Wrap":["L. Select Tortilla - (H)","B. Add Protein and Veggie Boosts (Veg & Non-veg)","H. Dips"],"Mexican California Chicken Wrap":["L. Select Tortilla - (H)","B. Add Protein and Veggie Boosts (Veg & Non-veg)","H. Dips"],"Harvest Bowl":["A. Choice of Veg Protein","B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Mediterranean Bowl":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Mint Yogurt Paneer Bowl":["A. Choice of Veg Protein","B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Mexican Chipotle Bowl":["A. Choice of Veg Protein","B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Korean Kimchi Paneer Bowl":["A. Choice of Veg Protein","B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Paneer Shawarma Bowl":["A. Choice of Veg Protein","B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Chipotle Paneer and Mozarrella Panini Sandwich":["A. Choice of Veg Protein"],"Chipotle Paneer Quesadilla":["A. Choice of Veg Protein"],"Classic Caesar Salad":["A. Choice of Veg Protein","B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Tandoori Paneer & Avocado Salad":["A. Choice of Veg Protein","B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Mexican California Salad":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Korean Chilli Crunch Paneer Salad":["A. Choice of Veg Protein","B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Avo Crunch Salad (New Recipe)":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Greek Falafel Salad":["B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Guac High Protein Paneer Salad":["A. Choice of Veg Protein","B. Add Protein and Veggie Boosts (Veg & Non-veg)","D. Make it more flavorful","C. Add Crunch & Texture","G. Add grain"],"Chipotle Paneer Softshell Tacos":["A. Choice of Veg Protein"],"Falafel Shawarma Wrap":["L. Select Tortilla - (H)","B. Add Protein and Veggie Boosts (Veg & Non-veg)","H. Dips"],"Mexican California Paneer Wrap":["A. Choice of Veg Protein","L. Select Tortilla - (H)","B. Add Protein and Veggie Boosts (Veg & Non-veg)","H. Dips"],"Paneer Caesar Salad Wrap":["A. Choice of Veg Protein","L. Select Tortilla - (H)","B. Add Protein and Veggie Boosts (Veg & Non-veg)","H. Dips"],"Hummus & Chipotle Paneer Wrap":["A. Choice of Veg Protein","L. Select Tortilla - (H)","B. Add Protein and Veggie Boosts (Veg & Non-veg)","H. Dips"],"Grilled Paneer Wrap":["A. Choice of Veg Protein","L. Select Tortilla - (H)","B. Add Protein and Veggie Boosts (Veg & Non-veg)","H. Dips"]}},"goal_cfg":{"hp_g":30,"hp_pct":25,"carb_max":30,"kcal_max":500,"p_min":18,"p_max":40,"c_min":22,"c_max":50,"f_min":25,"f_max":50},"plans":{"prices":{"Small-3":899,"Small-10":2500,"Small-15":3500,"Regular-3":999,"Regular-10":3000,"Regular-15":4200},"counts":[3,10,15]},"slots":{"lunch":[{"label":"11:30-12","display":"11:30 AM to 12:00 PM"},{"label":"12-12:30","display":"12:00 PM to 12:30 PM"},{"label":"12:30-1","display":"12:30 PM to 1:00 PM"},{"label":"1-1:30","display":"1:00 PM to 1:30 PM"},{"label":"1:30-2","display":"1:30 PM to 2:00 PM"},{"label":"2-2:30","display":"2:00 PM to 2:30 PM"},{"label":"2:30-3","display":"2:30 PM to 3:00 PM"}],"dinner":[{"label":"7:00PM-7:30PM","display":"7:00 PM to 7:30 PM"},{"label":"7:30PM-8:00PM","display":"7:30 PM to 8:00 PM"},{"label":"8:00PM-8:30PM","display":"8:00 PM to 8:30 PM"},{"label":"8:30PM-9:00PM","display":"8:30 PM to 9:00 PM"},{"label":"9:00PM-9:30PM","display":"9:00 PM to 9:30 PM"},{"label":"9:30PM-10:00PM","display":"9:30 PM to 10:00 PM"}]},"rules":{"cart_max":4,"meal_max":2,"day_left":3,"lunch_close_hour":10,"dinner_close_hour":17},"macros_so_far":{"kcal":2253,"protein":148,"carbs":223,"fat":128,"counted":5,"missing":0},"wallet":0};
+/* ------------------------------------------------------------------
+   Same order shape the live app posts to /api/app/order, so this front
+   end can be wired to the real API by swapping placeOrder()'s demo
+   branch for a fetch. Nothing here talks to any server.
+------------------------------------------------------------------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const rupee = n => "₹" + Number(n).toLocaleString("en-IN");
+const ICON = {
+  bowl:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 11h18a9 9 0 0 1-18 0Z"/><path d="M9 7c1-1 1-2 0-3M14 7c1-1 1-2 0-3"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  minus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M5 12h14"/></svg>',
+  x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>'
+};
+
+/* ---------------- state ---------------- */
+const C = D.customer, RULES = D.rules, GC = D.goal_cfg;
+const TOTAL = C.plan_meals + C.bonus_meals;
+const OGMAP = Object.fromEntries(D.opt_groups.groups.map(g => [g.name, g]));
+const DISH = Object.fromEntries(D.dishes.map(d => [d.id, d]));
+const now = new Date();
+const day = (offset) => { const d = new Date(now); d.setHours(0,0,0,0); d.setDate(d.getDate() + offset); return d; };
+const fmtDay = d => d.toLocaleDateString("en-IN", {weekday:"short", day:"numeric", month:"short"});
+const rel = d => { const n = Math.round((d - day(0)) / 864e5); return n === 0 ? "Today" : n === 1 ? "Tomorrow" : fmtDay(d); };
+const relIn = d => { const r = rel(d); return r === "Today" || r === "Tomorrow" ? r.toLowerCase() : r; };
+
+const planStart = day(-6), planEnd = new Date(planStart); planEnd.setDate(planEnd.getDate() + 30);
+const S = {
+  view: "menu", meal: null, vegOnly: false, goal: null, cat: D.cats[0],
+  cart: [], slot: {}, note: "", wallet: D.wallet, used: C.meals_used, held: 0,
+  orders: [], size: "Small", planN: 10, coupon: ""
+};
+const left = () => TOTAL - S.used;
+
+/* Ordering windows, as the live app runs them: lunch closes 10 AM on the day,
+   dinner 5 PM. A closed window rolls to the next day so the demo always works. */
+function windowFor(meal){
+  const close = meal === "lunch" ? RULES.lunch_close_hour : RULES.dinner_close_hour;
+  const h = now.getHours() + now.getMinutes() / 60;
+  const d = h < close ? day(0) : day(1);
+  return {meal, date: d, close, label: meal === "lunch" ? "Lunch" : "Dinner",
+          by: (close > 12 ? (close - 12) + " PM" : close + " AM") + (rel(d) === "Today" ? " today" : " " + rel(d).toLowerCase())};
+}
+const W = {lunch: windowFor("lunch"), dinner: windowFor("dinner")};
+S.meal = (W.lunch.date <= W.dinner.date) ? "lunch" : "dinner";
+const iso = d => d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+
+/* seeded "left" counts so the slot grid shows real states */
+const LEFT_SEED = {lunch:[12,2,9,12,0,12,12], dinner:[12,12,2,12,0,12]};
+const slotsFor = meal => D.slots[meal].map((s, i) => ({...s, left: (LEFT_SEED[meal][i] ?? 12)}));
+
+/* past orders (the 5 meals already used), dates relative to today */
+const PAST = [
+  {d:-1, meal:"lunch", slot:"12:30-1", dishes:["hummus-chipotle-chicken-wrap"]},
+  {d:-2, meal:"lunch", slot:"1-1:30", dishes:["grilled-chicken-wrap"]},
+  {d:-4, meal:"lunch", slot:"12-12:30", dishes:["mexican-chipotle-chicken-bowl"]},
+  {d:-5, meal:"dinner", slot:"8:00PM-8:30PM", dishes:["korean-kimchi-chicken-bowl","classic-caesar-salad"]}
+];
+
+/* ---------------- helpers ---------------- */
+function goalsOf(it){
+  if (!it.kcal) return [];
+  const g = [], p = it.p, c = it.c, f = it.f;
+  if (p != null && (p >= GC.hp_g || (p * 4) / it.kcal >= GC.hp_pct / 100)) g.push("High protein");
+  if (c != null && c <= GC.carb_max) g.push("Low carb");
+  if (it.kcal <= GC.kcal_max) g.push("Under " + GC.kcal_max + " kcal");
+  if (p != null && c != null && f != null) {
+    const pp = p*400/it.kcal, cp = c*400/it.kcal, fp = f*900/it.kcal;
+    if (pp >= GC.p_min && pp <= GC.p_max && cp >= GC.c_min && cp <= GC.c_max && fp >= GC.f_min && fp <= GC.f_max) g.push("Balanced");
+  }
+  return g;
+}
+const GOALS = ["High protein", "Low carb", "Under " + GC.kcal_max + " kcal", "Balanced"];
+const groupsFor = id => (D.opt_groups.by_dish[DISH[id].name] || []).map(n => OGMAP[n]).filter(Boolean)
+  .map(g => ({...g, options: g.options.filter(o => !(DISH[id].vt === "veg" && o.vt === "nonveg"))}));
+const optPrice = key => { const [g, o] = key.split("||"); const opt = (OGMAP[g]?.options || []).find(x => x.name === o); return opt ? opt.price || 0 : 0; };
+const optLabel = key => { const [g, o] = key.split("||"); const opt = (OGMAP[g]?.options || []).find(x => x.name === o); return opt ? opt.label || opt.name : o; };
+const extras = line => line.opts.reduce((t, k) => t + optPrice(k), 0);
+const extrasAll = () => S.cart.reduce((t, l) => t + extras(l), 0);
+const inMeal = meal => S.cart.filter(l => l.meal === meal).length;
+const qtyOf = (id, meal) => S.cart.filter(l => l.dish === id && l.meal === meal).length;
+const img = (id, k) => "img/" + id + "-" + k + ".webp";
+const slotText = s => esc(s.display.replace(/ (AM|PM)/g, "").replace(" to ", "-"));
+
+function roomFor(meal){
+  const held = S.cart.length;
+  if (held >= left()) return "That uses up your plan. Renew to add more.";
+  if (held >= RULES.cart_max) return "One order holds up to " + RULES.cart_max + " meals.";
+  if (inMeal(meal) >= RULES.meal_max) return "Up to " + RULES.meal_max + " " + meal + "es a day. Switch to " + (meal === "lunch" ? "dinner" : "lunch") + " for more.";
+  return "";
+}
+
+let toastT;
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2600); }
+function save(){ try { localStorage.setItem("hr_demo", JSON.stringify({cart:S.cart, slot:S.slot, used:S.used, orders:S.orders, wallet:S.wallet})); } catch(e){} }
+function restore(){ try { const s = JSON.parse(localStorage.getItem("hr_demo") || "null"); if (s) { Object.assign(S, s); S.cart = S.cart.filter(l => DISH[l.dish]); } } catch(e){} }
+
+/* ---------------- meal pass ---------------- */
+function stamps(el, stampFrom){
+  let h = "";
+  for (let i = 0; i < TOTAL; i++) {
+    const used = i < S.used, held = !used && i < S.used + S.cart.length && el.id === "stamps";
+    const fresh = stampFrom != null && i >= stampFrom && i < S.used;
+    h += '<span class="st' + (used ? " used" : held ? " held" : "") + (fresh ? " stamp" : "") + '"' +
+      (fresh ? ' style="animation-delay:' + (0.25 + (i - stampFrom) * 0.18) + 's"' : "") + '>' + (used || held ? ICON.bowl : "") + "</span>";
+  }
+  el.innerHTML = h;
+}
+function renderPass(){
+  $("hiName").textContent = C.first_name;
+  $("passLeft").innerHTML = left() + '<span>of ' + TOTAL + ' meals left</span>';
+  $("passEnd").innerHTML = C.plan_type + " plan<br>ends " + planEnd.toLocaleDateString("en-IN", {day:"numeric", month:"short"});
+  stamps($("stamps"));
+}
+
+/* ---------------- meal switch ---------------- */
+function renderMeals(){
+  $("meals").innerHTML = ["lunch", "dinner"].map(m => {
+    const w = W[m], n = inMeal(m);
+    return '<button class="meal" data-meal="' + m + '" aria-pressed="' + (S.meal === m) + '">' +
+      (n ? '<i class="cnt">' + n + "</i>" : "") +
+      "<b>" + w.label + "</b><span>" + rel(w.date) + ", " + w.date.toLocaleDateString("en-IN", {day:"numeric", month:"short"}) + "</span>" +
+      "<small>Order by " + w.by + "</small></button>";
+  }).join("");
+}
+
+/* ---------------- menu (built once, then patched in place) ---------------- */
+function buildMenu(){
+  $("tabs").innerHTML = D.cats.map(c => '<button class="tab" role="tab" data-cat="' + esc(c) + '" aria-selected="' + (c === S.cat) + '">' + esc(c) + "</button>").join("") +
+    '<button class="veg" id="vegBtn" role="switch" aria-checked="false"><span>Veg only</span><span class="sw"></span></button>';
+  $("chips").innerHTML = GOALS.map(g => '<button class="chip" data-goal="' + esc(g) + '" aria-pressed="false">' + esc(g) + "</button>").join("");
+  let first = 0;
+  $("menuList").innerHTML = D.cats.map(c => {
+    const rows = D.dishes.filter(d => d.cat === c).map(d => {
+      const eager = first++ < 4;
+      return '<div class="row" data-id="' + d.id + '" data-vt="' + d.vt + '" data-goals="' + esc(goalsOf(d).join("|")) + '">' +
+        '<div class="pic"><img src="' + img(d.id, "t") + '" width="116" height="116" alt="" decoding="async"' + (eager ? (first === 1 ? ' fetchpriority="high"' : "") : ' loading="lazy"') + "></div>" +
+        '<div class="info"><div class="nm"><i class="vt' + (d.vt === "nonveg" ? " n" : "") + '" aria-label="' + (d.vt === "veg" ? "Veg" : "Non-veg") + '"></i>' + esc(d.name) + "</div>" +
+        '<p class="ds">' + esc(d.desc) + "</p>" +
+        '<div class="mac"><span><b>' + d.kcal + "</b> kcal</span><span><b>" + d.p + "g</b> protein</span><span><b>" + d.c + "g</b> carbs</span></div></div>" +
+        '<button class="open" data-open="' + d.id + '" aria-label="' + esc(d.name) + ', details"></button>' +
+        '<div class="add" data-add-wrap="' + d.id + '"></div></div>';
+    }).join("");
+    return '<section class="sec" id="sec-' + esc(c) + '" data-cat="' + esc(c) + '"><h2>' + esc(c) + '</h2>' + rows +
+      '<p class="empty">Nothing here matches this filter.</p></section>';
+  }).join("");
+  syncAdds();
+}
+function addCtl(id){
+  const q = qtyOf(id, S.meal), name = esc(DISH[id].name);
+  return q ? '<div class="stepper"><button data-dec="' + id + '" aria-label="One less ' + name + '">' + ICON.minus + '</button><output aria-live="polite">' + q +
+             '</output><button data-inc="' + id + '" aria-label="One more ' + name + '">' + ICON.plus + "</button></div>"
+           : '<button class="plus" data-inc="' + id + '" aria-label="Add ' + name + ' to ' + S.meal + '">' + ICON.plus + "</button>";
+}
+function syncAdds(){ document.querySelectorAll("[data-add-wrap]").forEach(w => { const h = addCtl(w.dataset.addWrap); if (w._h !== h) { w.innerHTML = h; w._h = h; } }); }
+function applyFilters(){
+  document.querySelectorAll(".row").forEach(r => {
+    const hide = (S.vegOnly && r.dataset.vt !== "veg") || (S.goal && !r.dataset.goals.split("|").includes(S.goal));
+    r.classList.toggle("hide", hide);
+  });
+  document.querySelectorAll(".sec").forEach(s => s.classList.toggle("none", !s.querySelector(".row:not(.hide)")));
+}
+
+/* ---------------- cart ---------------- */
+let lid = 0;
+function addLine(id, opts){
+  const why = roomFor(S.meal);
+  if (why) { toast(why); return false; }
+  S.cart.push({lid: Date.now() + "" + (lid++), dish: id, meal: S.meal, opts: opts || []});
+  changed(); return true;
+}
+function removeOne(id){
+  for (let i = S.cart.length - 1; i >= 0; i--) if (S.cart[i].dish === id && S.cart[i].meal === S.meal) { S.cart.splice(i, 1); break; }
+  changed();
+}
+function changed(){
+  save(); syncAdds(); renderMeals(); stamps($("stamps"));
+  const n = S.cart.length, bar = $("cartbar");
+  bar.classList.toggle("show", n > 0 && S.view === "menu");
+  if (n) {
+    const ex = extrasAll(), meals = ["lunch","dinner"].filter(m => inMeal(m)).map(m => W[m].label.toLowerCase());
+    $("cartText").innerHTML = "<b>" + n + " meal" + (n > 1 ? "s" : "") + " for " + meals.join(" and ") + "</b>" + (ex ? rupee(ex) + " in extras" : "From your plan");
+  }
+  if (sheetKind === "review") renderReview();
+}
+
+/* ---------------- sheets ---------------- */
+let sheetKind = null, lastFocus = null;
+function openSheet(kind, html){
+  sheetKind = kind; lastFocus = document.activeElement;
+  const sh = $("sheet"); sh.innerHTML = html; sh.classList.add("show"); $("scrim").classList.add("show");
+  document.body.style.overflow = "hidden";
+  setTimeout(() => { const f = sh.querySelector("[data-autofocus]") || sh.querySelector("button"); f && f.focus({preventScroll:true}); }, 60);
+}
+function closeSheet(){
+  sheetKind = null; $("sheet").classList.remove("show"); $("scrim").classList.remove("show");
+  document.body.style.overflow = ""; lastFocus && lastFocus.focus && lastFocus.focus({preventScroll:true});
+}
+const head = (title, sub) => '<div class="sh-head"><div><h3 id="sheetTitle">' + title + "</h3>" + (sub ? "<p>" + sub + "</p>" : "") + '</div><button class="x" data-close aria-label="Close">' + ICON.x + "</button></div>";
+
+/* dish sheet: photo, macros, options, add */
+let dEdit = null, dOpts = [];
+function openDish(id, editLid){
+  const d = DISH[id];
+  dEdit = editLid || null;
+  dOpts = editLid ? [...S.cart.find(l => l.lid === editLid).opts] : [];
+  const kc = d.kcal, pp = Math.round(d.p*400/kc), cp = Math.round(d.c*400/kc), fp = Math.max(0, 100 - pp - cp);
+  const groups = groupsFor(id);
+  const gh = groups.map(g => {
+    const multi = false, type = "radio";
+    return '<div class="og"><h4>' + esc(g.title) + "<small>" + (g.swap ? "Pick 1" : "Optional, pick 1") + "</small></h4>" +
+      g.options.map((o, j) => {
+        const key = g.name + "||" + o.name;
+        const checked = g.swap ? (dOpts.some(k => k.startsWith(g.name + "||")) ? dOpts.includes(key) : !o.price) : dOpts.includes(key);
+        return '<label class="opt"><span class="on"><input type="' + (g.swap ? "radio" : "checkbox") + '" name="' + esc(g.name) + '" data-key="' + esc(key) + '" data-swap="' + (g.swap ? 1 : 0) + '"' +
+          (checked ? " checked" : "") + "><span>" + esc(o.label || o.name) + '</span></span><span class="pr">' + (o.price ? "+ " + rupee(o.price) : (g.swap ? "Included" : "")) + "</span></label>";
+      }).join("") + "</div>";
+  }).join("");
+  const tags = goalsOf(d).map(t => '<span class="tag">' + esc(t) + "</span>").join("");
+  openSheet("dish",
+    '<div class="sh-body" style="padding:0">' +
+      '<div class="hero"><img src="' + img(id, "h") + '" width="720" height="720" alt="' + esc(d.name) + '"><button class="x" data-close aria-label="Close">' + ICON.x + "</button></div>" +
+      '<div style="padding:0 18px 18px">' +
+        '<h3 class="dname" id="sheetTitle"><i class="vt' + (d.vt === "nonveg" ? " n" : "") + '"></i>' + esc(d.name) + "</h3>" +
+        '<p class="ddesc">' + esc(d.desc) + "</p>" + (tags ? '<div class="tags">' + tags + "</div>" : "") +
+        '<div class="macro"><div class="macro-top"><b>' + kc + ' kcal</b><span>' + C.plan_type + " portion</span></div>" +
+          '<div class="mbar" aria-hidden="true"><i class="k-p" style="width:' + pp + '%"></i><i class="k-c" style="width:' + cp + '%"></i><i class="k-f" style="width:' + fp + '%"></i></div>' +
+          '<div class="mleg"><div><span class="dotk k-p"></span>Protein<b>' + d.p + "g</b></div><div><span class=\"dotk k-c\"></span>Carbs<b>" + d.c + "g</b></div><div><span class=\"dotk k-f\"></span>Fat<b>" + d.f + "g</b></div></div></div>" +
+        gh +
+      "</div></div>" +
+    '<div class="sh-foot"><button class="btn wide" id="dishAdd" data-autofocus></button><p class="foot-note" id="dishNote"></p></div>');
+  syncDishFoot(id);
+  $("sheet").querySelectorAll(".opt input").forEach(inp => inp.onchange = () => {
+    const key = inp.dataset.key, g = key.split("||")[0];
+    if (inp.dataset.swap === "1") {
+      dOpts = dOpts.filter(k => !k.startsWith(g + "||")); if (optPrice(key)) dOpts.push(key);
+    } else {
+      $("sheet").querySelectorAll('input[name="' + CSS.escape(g) + '"]').forEach(o => { if (o !== inp) o.checked = false; });
+      dOpts = dOpts.filter(k => !k.startsWith(g + "||")); if (inp.checked) dOpts.push(key);
+    }
+    syncDishFoot(id);
+  });
+  $("dishAdd").onclick = () => {
+    if (dEdit) { const l = S.cart.find(x => x.lid === dEdit); if (l) l.opts = [...dOpts]; changed(); closeSheet(); toast("Updated"); openReview(); return; }
+    if (addLine(id, [...dOpts])) { closeSheet(); toast("Added to " + W[S.meal].label.toLowerCase() + ", " + relIn(W[S.meal].date)); }
+  };
+}
+function syncDishFoot(id){
+  const ex = dOpts.reduce((t, k) => t + optPrice(k), 0);
+  const why = dEdit ? "" : roomFor(S.meal);
+  const b = $("dishAdd");
+  b.textContent = dEdit ? "Save changes" : why ? "Can't add more " + S.meal : "Add to " + W[S.meal].label.toLowerCase() + (ex ? ", extras " + rupee(ex) : "");
+  b.disabled = !!why;
+  $("dishNote").textContent = why || (ex ? "The meal comes from your plan. Extras are paid from your wallet." : "Uses 1 meal from your plan.");
+}
+
+/* review sheet */
+function openReview(){ openSheet("review", ""); renderReview(); }
+function renderReview(){
+  const meals = ["lunch","dinner"].filter(m => inMeal(m));
+  if (!meals.length) { closeSheet(); return; }
+  const ex = extrasAll(), short = Math.max(0, ex - S.wallet);
+  const missing = meals.filter(m => !S.slot[m]);
+  const groups = meals.map(m => {
+    const w = W[m];
+    const lines = S.cart.filter(l => l.meal === m).map(l => {
+      const d = DISH[l.dish], e = extras(l);
+      return '<div class="line"><div class="th"><img src="' + img(l.dish, "t") + '" width="48" height="48" alt=""></div>' +
+        '<div><div class="t">' + esc(d.name) + "</div>" + '<div class="e">' + (l.opts.length ? esc(l.opts.map(optLabel).join(", ")) + " <b>+" + rupee(e) + "</b>" : "No extras") + "</div></div>" +
+        '<div class="lact">' + (groupsFor(l.dish).length ? '<button data-edit="' + l.lid + '">Edit</button>' : "") + '<button class="rm" data-rm="' + l.lid + '" aria-label="Remove ' + esc(d.name) + '">Remove</button></div></div>';
+    }).join("");
+    const slots = slotsFor(m).map(s => '<button class="slot" data-slot="' + esc(s.label) + '" data-meal="' + m + '" aria-pressed="' + (S.slot[m] === s.label) + '"' + (s.left ? "" : " disabled") + ">" +
+      slotText(s) + "<small" + (s.left && s.left <= 3 ? ' class="low"' : "") + ">" + (s.left ? (s.left <= 3 ? s.left + " left" : "Open") : "Full") + "</small></button>").join("");
+    return '<div class="grp"><div class="grp-h"><b>' + w.label + ", " + relIn(w.date) + "</b><span>" + fmtDay(w.date) + "</span></div>" + lines +
+      '<div class="slots-h">Delivery time' + (S.slot[m] ? '<span class="ok">' + esc(slotsFor(m).find(s => s.label === S.slot[m]).display) + "</span>" : "<span>Pick one</span>") + '</div><div class="slots">' + slots + "</div></div>";
+  }).join("");
+  const wallet = ex ? '<div class="wallet' + (short ? "" : " ok") + '"><div>Extras <b>' + rupee(ex) + "</b>, wallet " + rupee(S.wallet) + (short ? "" : "<br><b>Covered by your wallet</b>") + "</div>" +
+    (short ? '<button class="btn gold" data-topup="' + short + '">Add ' + rupee(short) + "</button>" : "") + "</div>" : "";
+  const n = S.cart.length;
+  const label = missing.length ? "Pick a " + missing.join(" and ") + " time" : short ? "Add " + rupee(short) + " to your wallet first" : "Place order, uses " + n + " meal" + (n > 1 ? "s" : "");
+  const body = '<div class="sh-body">' + groups +
+    '<div class="grp" style="padding:2px 14px"><div class="kv"><span class="k">Deliver to</span><span class="v">Office, ' + esc(C.outlet_name) + ' outlet <button class="link" data-act="addr">Change</button></span></div>' +
+    '<div class="kv"><span class="k">Meals left after this</span><span class="v">' + (left() - n) + " of " + TOTAL + "</span></div></div>" +
+    '<textarea class="note" id="note" rows="1" placeholder="Note for the kitchen (optional)" aria-label="Note for the kitchen">' + esc(S.note) + "</textarea>" + wallet + "</div>" +
+    '<div class="sh-foot"><button class="btn wide" id="placeBtn"' + (missing.length || short ? " disabled" : "") + ">" + label + "</button></div>";
+  const sh = $("sheet"), sb = sh.querySelector(".sh-body"), keep = sb ? sb.scrollTop : 0;
+  sh.innerHTML = head("Your order", n + " meal" + (n > 1 ? "s" : "") + " from your plan") + body;
+  const nb = sh.querySelector(".sh-body"); if (nb) nb.scrollTop = keep;
+  $("note").oninput = e => { S.note = e.target.value; };
+  $("placeBtn").onclick = placeOrder;
+}
+
+/* the payload the live API takes, built exactly as the current app builds it */
+function orderPayload(){
+  return {t: "<member token>", addr_slot: 0, items: S.cart.map(l => ({
+    meal_type: DISH[l.dish].vt === "veg" ? "Veg" : "Non-Veg", dish: DISH[l.dish].name, slot: S.slot[l.meal],
+    note: S.note.trim(), date: iso(W[l.meal].date), addr_slot: 0, opts: l.opts }))};
+}
+function placeOrder(){
+  const payload = orderPayload();
+  console.info("[demo] would POST /api/app/order", payload);
+  const from = S.used, byMeal = {};
+  S.cart.forEach(l => (byMeal[l.meal] = byMeal[l.meal] || []).push(l));
+  Object.entries(byMeal).forEach(([m, ls]) => S.orders.unshift({id: Date.now() + m, meal: m, date: iso(W[m].date), slot: S.slot[m], lines: ls.map(l => ({dish: l.dish, opts: l.opts}))}));
+  S.wallet -= extrasAll(); S.used += S.cart.length;
+  const meals = Object.keys(byMeal);
+  const ticket = Object.entries(byMeal).map(([m, ls]) => '<div class="kv"><span class="k">' + W[m].label + ", " + relIn(W[m].date) + "<br>" + esc(slotsFor(m).find(s => s.label === S.slot[m]).display) + '</span><span class="v">' + ls.map(l => esc(DISH[l.dish].name)).join("<br>") + "</span></div>").join("");
+  S.cart = []; S.slot = {}; S.note = "";
+  save(); closeSheet(); changed(); renderOrders(); renderPlan();
+  $("doneH").textContent = meals.map(m => W[m].label).join(" and ") + " booked";
+  $("doneP").textContent = left() + " of " + TOTAL + " meals left on your plan.";
+  $("doneTicket").innerHTML = ticket;
+  show("done");
+  stamps($("doneStamps"), from);
+}
+
+/* top-up, reschedule, cancel and the small stubs */
+function openTopup(need){
+  const amts = [need, Math.max(200, Math.ceil(need/100)*100 + 100), 500].filter((v, i, a) => a.indexOf(v) === i);
+  let pick = amts[0];
+  openSheet("topup", head("Add money to your wallet", "Extras on this order come to " + rupee(extrasAll())) +
+    '<div class="sh-body"><div class="amts">' + amts.map((a, i) => '<button class="amt" data-amt="' + a + '" aria-pressed="' + (i === 0) + '">' + rupee(a) + "<small>" + (i === 0 ? "Exactly what's due" : "Keeps a balance") + "</small></button>").join("") + "</div>" +
+    '<p class="foot-note" style="margin-top:12px">Demo: the payment page is skipped and the money is added straight away.</p></div>' +
+    '<div class="sh-foot"><button class="btn wide" id="payBtn">Pay ' + rupee(pick) + "</button></div>");
+  $("sheet").querySelectorAll(".amt").forEach(b => b.onclick = () => { pick = +b.dataset.amt; $("sheet").querySelectorAll(".amt").forEach(x => x.setAttribute("aria-pressed", x === b)); $("payBtn").textContent = "Pay " + rupee(pick); });
+  $("payBtn").onclick = () => { S.wallet += pick; save(); toast(rupee(pick) + " added to your wallet"); openReview(); };
+}
+function openReschedule(oid){
+  const o = S.orders.find(x => x.id === oid); if (!o) return;
+  let pick = o.slot;
+  openSheet("resched", head("Change delivery time", W[o.meal].label + ", " + fmtDay(new Date(o.date + "T00:00"))) +
+    '<div class="sh-body"><div class="slots" style="margin-top:6px">' + slotsFor(o.meal).map(s => '<button class="slot" data-pick="' + esc(s.label) + '" aria-pressed="' + (s.label === o.slot) + '"' + (s.left || s.label === o.slot ? "" : " disabled") + ">" + slotText(s) + "<small>" + (s.left ? s.left + " left" : "Full") + "</small></button>").join("") + "</div></div>" +
+    '<div class="sh-foot"><button class="btn wide" id="rsBtn">Move my ' + o.meal + "</button></div>");
+  $("sheet").querySelectorAll("[data-pick]").forEach(b => b.onclick = () => { pick = b.dataset.pick; $("sheet").querySelectorAll("[data-pick]").forEach(x => x.setAttribute("aria-pressed", x === b)); });
+  $("rsBtn").onclick = () => { o.slot = pick; save(); renderOrders(); closeSheet(); toast("Moved to " + slotsFor(o.meal).find(s => s.label === pick).display); };
+}
+function openCancel(oid){
+  const o = S.orders.find(x => x.id === oid); if (!o) return;
+  openSheet("cancel", head("Cancel this " + o.meal + "?", o.lines.length + " meal" + (o.lines.length > 1 ? "s go" : " goes") + " back to your plan") +
+    '<div class="sh-foot" style="display:grid;gap:10px"><button class="btn wide" id="cxYes" style="background:var(--tomato)">Cancel ' + o.meal + '</button><button class="btn wide ghost" data-close>Keep it</button></div>');
+  $("cxYes").onclick = () => {
+    S.orders = S.orders.filter(x => x.id !== oid); S.used -= o.lines.length;
+    S.wallet += o.lines.reduce((t, l) => t + l.opts.reduce((a, k) => a + optPrice(k), 0), 0);
+    save(); renderOrders(); renderPlan(); renderPass(); closeSheet(); toast(W[o.meal].label + " cancelled, meal returned to your plan");
+  };
+}
+function openForm(kind){
+  const issue = kind === "issue";
+  openSheet(kind, head(issue ? "Report a problem" : "Ask us to call you", issue ? "Tell us what went wrong and we'll sort it" : "We call back within working hours") +
+    '<div class="sh-body">' + (issue ? '<textarea class="note" rows="4" placeholder="What went wrong? Missing item, late, spilled..." aria-label="What went wrong"></textarea>' :
+      '<textarea class="note" rows="3" placeholder="What should we call about? (optional)" aria-label="Reason for the call"></textarea>') + "</div>" +
+    '<div class="sh-foot"><button class="btn wide" id="formBtn">' + (issue ? "Send report" : "Request a call") + "</button></div>");
+  $("formBtn").onclick = () => { closeSheet(); toast(issue ? "Report sent" : "Call requested"); };
+}
+
+/* ---------------- orders + plan pages ---------------- */
+function orderCard(o, past){
+  const d = new Date(o.date + "T00:00"), slot = slotsFor(o.meal).find(s => s.label === o.slot);
+  return '<div class="card"><div class="ord"><div><div class="when' + (past ? " past" : "") + '">' + W[o.meal].label + ", " + (past ? fmtDay(d) : relIn(d)) + (slot ? ", " + esc(slot.display) : "") + "</div>" +
+    o.lines.map(l => '<div class="dish">' + esc(DISH[l.dish].name) + "</div>" + (l.opts.length ? '<div class="ex">' + esc(l.opts.map(optLabel).join(", ")) + "</div>" : "")).join("") +
+    '</div><span class="pill' + (past ? " past" : "") + '">' + (past ? "Delivered" : "Confirmed") + "</span></div>" +
+    (past ? "" : '<div class="ord-act"><button class="btn ghost" data-resched="' + o.id + '">Change time</button><button class="btn ghost" data-cancel="' + o.id + '" style="color:var(--tomato)">Cancel</button></div>') + "</div>";
+}
+function renderOrders(){
+  const up = S.orders;
+  $("ordSub").textContent = up.length ? up.length + " coming up" : "Nothing booked yet";
+  $("ordUp").innerHTML = up.length ? up.map(o => orderCard(o, false)).join("") : '<div class="card"><h3>No meals booked</h3><p style="font-size:14px;color:var(--mute);margin:6px 0 12px">Pick tomorrow\'s lunch in a few taps.</p><button class="btn" data-go="menu">Open the menu</button></div>';
+  $("ordPast").innerHTML = PAST.map(p => orderCard({meal: p.meal, date: iso(day(p.d)), slot: p.slot, lines: p.dishes.map(x => ({dish: x, opts: []}))}, true)).join("");
+  const dot = $("ordDot"); up.length ? dot.dataset.n = up.length : delete dot.dataset.n;
+}
+function renderPlan(){
+  const daysLeft = Math.max(0, Math.round((planEnd - day(0)) / 864e5));
+  $("planSub").textContent = C.plan_type + ", " + C.plan_meals + " meals + " + C.bonus_meals + " bonus";
+  $("planLeft").innerHTML = left() + "<span>of " + TOTAL + " meals left</span>";
+  $("planEnd").innerHTML = "Ends " + planEnd.toLocaleDateString("en-IN", {day:"numeric", month:"short"}) + "<br>" + daysLeft + " days to go";
+  stamps($("planStamps"));
+  const M = D.macros_so_far, n = M.counted || 1;
+  $("planStats").innerHTML = [
+    [C.meals_used, "meals delivered"], [Math.round(M.protein / n) + "g", "protein per meal, average"],
+    [Math.round(M.kcal / n), "kcal per meal, average"], [M.protein + "g", "protein in total"]
+  ].map(s => '<div class="stat"><b>' + s[0] + "</b><span>" + s[1] + "</span></div>").join("");
+  renderPlans();
+}
+function renderPlans(){
+  const P = D.plans.prices;
+  $("plans").innerHTML = D.plans.counts.map(c => { const p = P[S.size + "-" + c];
+    return '<button class="plan" data-n="' + c + '" aria-pressed="' + (S.planN === c) + '"><b>' + c + '</b><span class="m">meals</span><span class="p">' + rupee(p) + '</span><span class="pm">' + rupee(Math.round(p / c)) + " a meal</span></button>"; }).join("");
+  $("renewBtn").textContent = "Renew for " + rupee(P[S.size + "-" + S.planN]);
+}
+
+/* ---------------- navigation ---------------- */
+function show(v){
+  S.view = v;
+  document.querySelectorAll(".view").forEach(x => x.classList.toggle("active", x.id === "v-" + v));
+  document.querySelectorAll("nav button").forEach(b => b.dataset.go === v ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
+  $("cartbar").classList.toggle("show", v === "menu" && S.cart.length > 0);
+  window.scrollTo(0, 0);
+  if (location.hash.slice(1) !== v) history.replaceState(null, "", "#" + v);
+}
+
+/* ---------------- events (one delegated listener) ---------------- */
+document.addEventListener("click", e => {
+  const t = e.target.closest("button, [data-close], .scrim"); if (!t) return;
+  const ds = t.dataset;
+  if (t.id === "scrim" || "close" in ds) return closeSheet();
+  if (ds.go) { if (sheetKind) closeSheet(); return show(ds.go); }
+  if (ds.inc) { addLine(ds.inc); return; }
+  if (ds.dec) return removeOne(ds.dec);
+  if (ds.open) return openDish(ds.open);
+  if (ds.meal && t.classList.contains("meal")) { S.meal = ds.meal; renderMeals(); syncAdds(); return; }
+  if (ds.cat) { const s = $("sec-" + ds.cat); const y = s.getBoundingClientRect().top + scrollY - $("bar").offsetHeight + 2; scrollTo({top: y, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); return; }
+  if (t.id === "vegBtn") { S.vegOnly = !S.vegOnly; t.setAttribute("aria-checked", S.vegOnly); applyFilters(); return; }
+  if (ds.goal) { S.goal = S.goal === ds.goal ? null : ds.goal; document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.goal === S.goal)); applyFilters(); return; }
+  if (t.id === "reviewBtn") return openReview();
+  if (t.id === "pass") return show("plan");
+  if (ds.slot) { S.slot[ds.meal] = ds.slot; save(); renderReview(); return; }
+  if (ds.rm) { S.cart = S.cart.filter(l => l.lid !== ds.rm); changed(); return; }
+  if (ds.edit) { const l = S.cart.find(x => x.lid === ds.edit); S.meal = l.meal; return openDish(l.dish, l.lid); }
+  if (ds.topup) return openTopup(+ds.topup);
+  if (ds.resched) return openReschedule(ds.resched);
+  if (ds.cancel) return openCancel(ds.cancel);
+  if (ds.sheet) return openForm(ds.sheet);
+  if (ds.size) { S.size = ds.size; document.querySelectorAll("#sizeSeg button").forEach(b => b.setAttribute("aria-pressed", b === t)); return renderPlans(); }
+  if (ds.n && t.classList.contains("plan")) { S.planN = +ds.n; return renderPlans(); }
+  if (t.id === "renewBtn") return toast("Demo: this opens the payment page");
+  if (t.id === "applyCoupon") { const v = $("coupon").value.trim(); return toast(v ? "Demo: " + v.toUpperCase() + " would be checked here" : "Type a coupon code first"); }
+  if (t.id === "shareRef") { const txt = "Try Harvest Salad Co's Regular's Club with my code DEV-DEMO for an extra meal."; if (navigator.share) navigator.share({text: txt}).catch(() => {}); else navigator.clipboard?.writeText(txt).then(() => toast("Copied, paste it anywhere")); return; }
+  if (ds.act === "addr") return toast("Demo: saved addresses open here");
+  if (ds.act === "invoices") return toast("Demo: invoices list opens here");
+  if (ds.act === "gst") return toast("Demo: GSTIN form opens here");
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && sheetKind) closeSheet(); });
+/* warm the big photo the moment a finger lands on a dish */
+document.addEventListener("pointerdown", e => { const o = e.target.closest("[data-open]"); if (o && !o._w) { o._w = 1; new Image().src = img(o.dataset.open, "h"); } }, {passive: true});
+
+/* category tab follows the scroll */
+function watchScroll(){
+  const bar = $("bar");
+  const io = new IntersectionObserver(es => {
+    es.forEach(en => { if (en.isIntersecting) { S.cat = en.target.dataset.cat; document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.cat === S.cat)); } });
+  }, {rootMargin: "-30% 0px -65% 0px"});
+  document.querySelectorAll(".sec").forEach(s => io.observe(s));
+  const sentinel = document.createElement("div"); bar.before(sentinel);
+  new IntersectionObserver(([en]) => bar.classList.toggle("stuck", !en.isIntersecting && en.boundingClientRect.top < 0)).observe(sentinel);
+}
+
+/* ---------------- boot ---------------- */
+restore();
+renderPass(); renderMeals(); buildMenu(); applyFilters(); renderOrders(); renderPlan(); changed();
+const start = location.hash.slice(1); if (["orders","plan"].includes(start)) show(start);
+requestAnimationFrame(watchScroll);
+</script>
+</body>
+</html>
