@@ -576,7 +576,7 @@ function removeOne(id){
   changed();
 }
 function changed(){
-  save(); syncAdds(); renderMeals(); stamps($("stamps"));
+  save(); syncAdds(); renderMeals(); renderPass();
   const n = S.cart.length, bar = $("cartbar");
   bar.classList.toggle("show", n > 0 && S.view === "menu");
   if (n) {
